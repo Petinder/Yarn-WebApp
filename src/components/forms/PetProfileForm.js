@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Button, FormField, Message, Header, Radio } from 'semantic-ui-react';
+import { DateInput } from 'semantic-ui-calendar-react';
 import Validator from 'validator';
 import InlineError from '../messages/InlineError';
 import propTypes from 'prop-types';
@@ -7,6 +8,11 @@ import propTypes from 'prop-types';
 const options = [
     { key: 'c', text: 'Gato', value: 'gato' },
     { key: 'd', text: 'Perro', value: 'perro' },
+  ]
+
+const optionsCastra = [
+    { key: 's', text: 'Si', value: 'si' },
+    { key: 'n', text: 'No', value: 'no' },
   ]
 
 class PetProfileForm extends React.Component {
@@ -35,6 +41,14 @@ class PetProfileForm extends React.Component {
         data: { ...this.state.data, [e.target.name]: e.target.value } 
     })
 
+    handleChange = (e, { value }) => this.setState({ value })
+
+    handleDateChange = (event, {name, value}) => {
+        if (this.state.hasOwnProperty(name)) {
+          this.setState({ [name]: value });
+        }
+    }
+
     onSubmit = () => {
         const errors = this.validate(this.state.data);
         this.setState({errors});
@@ -55,6 +69,7 @@ class PetProfileForm extends React.Component {
 
     render() {
         const { data, errors } = this.state;
+        const { value } = this.state
         return (
             <Form onSubmit={this.onSubmit}>
                 {errors.global && <Message negative>
@@ -79,18 +94,26 @@ class PetProfileForm extends React.Component {
                         control={Radio}
                         label='Perro'
                         value='1'
-                        checked={data.petSpecies === '1'}
+                        checked={value === '1'}
                         onChange={this.handleChange}
                     />
                     <Form.Field
                         control={Radio}
                         label='Gato'
                         value='2'
-                        checked={data.petSpecies === '2'}
+                        checked={value === '2'}
                         onChange={this.handleChange}
                     />
                 </Form.Group>
                 <Form.Select fluid label='Raza' options={options} placeholder='Raza' />
+                <DateInput
+                    name="petBirthDate"
+                    placeholder="Fecha nacimiento"
+                    value={this.state.date}
+                    iconPosition="left"
+                    onChange={this.handleDateChange} 
+                />
+                <Form.Select fluid label='Castrado' options={optionsCastra} placeholder='Castrado' />
                 <Header as='h3'>Datos dueño de mascota</Header>
                 <FormField error={!!errors.ownerName}>
                     <label htmlFor="ownerName">Nombre</label>
