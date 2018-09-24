@@ -10,6 +10,11 @@ const options = [
     { key: 'd', text: 'Perro', value: 'perro' },
   ]
 
+  const optionsSex = [
+    { key: 'f', text: 'Femenino', value: 'femenino' },
+    { key: 'm', text: 'Masculino', value: 'masculino' },
+  ]
+
 const optionsCastra = [
     { key: 's', text: 'Si', value: 'si' },
     { key: 'n', text: 'No', value: 'no' },
@@ -106,12 +111,13 @@ class PetProfileForm extends React.Component {
                     />
                 </Form.Group>
                 <Form.Select fluid label='Raza' options={options} placeholder='Raza' />
+                <Form.Select fluid label='Sexo' options={optionsSex} placeholder='Sexo' />
                 <DateInput
-                    name="petBirthDate"
+                    name="date"
+                    //value={this.state.date}
                     placeholder="Fecha nacimiento"
-                    value={this.state.date}
-                    iconPosition="left"
-                    onChange={this.handleDateChange} 
+                    value={data.petBirthDate}
+                    onChange={this.handleChange} 
                 />
                 <Form.Select fluid label='Castrado' options={optionsCastra} placeholder='Castrado' />
                 <Header as='h3'>Datos dueño de mascota</Header>

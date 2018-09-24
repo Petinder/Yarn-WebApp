@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import PetProfileForm from "../forms/PetProfileForm";
-import { login } from "../../actions/auth";
 
 class PetProfilePage extends React.Component {
     submit = data => 
@@ -25,4 +23,4 @@ PetProfilePage.propTypes = {
     login: PropTypes.func.isRequired
 }
 
-export default connect(null, {login})(PetProfilePage);
+export default PetProfilePage;
