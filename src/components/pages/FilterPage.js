@@ -8,7 +8,7 @@ class FilterPage extends React.Component {
     render(){
         return(
            <div>
-            <h1>Filter Page!</h1>
+            <h1>Filtros</h1>
             <FilterForm submit={this.submit} />
            </div> 
         );

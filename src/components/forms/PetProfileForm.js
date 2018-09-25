@@ -11,8 +11,8 @@ const options = [
   ]
 
   const optionsSex = [
-    { key: 'f', text: 'Femenino', value: 'femenino' },
-    { key: 'm', text: 'Masculino', value: 'masculino' },
+    { key: 'f', text: 'Hembra', value: 'hembra' },
+    { key: 'm', text: 'Macho', value: 'macho' },
   ]
 
 const optionsCastra = [
