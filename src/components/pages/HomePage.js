@@ -9,6 +9,8 @@ const HomePage = () => (
         <Link to="/profile">Perfil Mascota</Link>
         <br></br>
         <Link to="/filter">Filtros</Link>
+        <br></br>
+        <Link to="/Vet">Veterinarios</Link>
     </div>
 )
 
