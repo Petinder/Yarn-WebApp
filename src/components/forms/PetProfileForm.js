@@ -4,6 +4,7 @@ import { DateInput } from 'semantic-ui-calendar-react';
 import Validator from 'validator';
 import InlineError from '../messages/InlineError';
 import propTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 const options = [
     { key: 'c', text: 'Gato', value: 'gato' },
@@ -77,6 +78,7 @@ class PetProfileForm extends React.Component {
         const { value } = this.state
         return (
             <Form onSubmit={this.onSubmit}>
+                <Link to="/filter">Filtros</Link>
                 {errors.global && <Message negative>
                     <Message.Header>Something went wrong!</Message.Header>
                     <p>{errors.global}</p>
