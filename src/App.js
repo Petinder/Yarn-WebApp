@@ -8,11 +8,11 @@ import VetPage from "./components/pages/VetPage";
 
 const App = () => 
 <div className="ui container">
-  <Route path="/" exact component={HomePage} />
-  <Route path="/login" exact component={LoginPage} />
-  <Route path="/profile" exact component={PetProfilePage} />
-  <Route path="/filter" exact component={FilterPage} />
-  <Route path="/Vet" exact component={VetPage} />
+  <Route path="/" exact component={LoginPage} />
+  //<Route path="/login" exact component={LoginPage} />
+  //<Route path="/profile" exact component={PetProfilePage} />
+  //<Route path="/filter" exact component={FilterPage} />
+  //<Route path="/Vet" exact component={VetPage} />
 </div>; 
 
 

@@ -2,7 +2,6 @@ import React from 'react';
 import { Form, Button, FormField, Message } from 'semantic-ui-react';
 import Validator from 'validator';
 import InlineError from '../messages/InlineError';
-import propTypes from "prop-types";
 
 class LoginForm extends React.Component {
     state = {
@@ -66,14 +65,10 @@ class LoginForm extends React.Component {
                     onChange={this.onChange}/>
                     {errors.password && <InlineError text={errors.password} />}
                 </FormField>
-                <Button primary>Login</Button>
+                <Button primary>Acceder</Button>
             </Form>
         );
     }
 }
-
-LoginForm.propTypes = {
-    submit: propTypes.func.isRequired
-};
 
 export default LoginForm;
