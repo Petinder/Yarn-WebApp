@@ -10,6 +10,7 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import rootReducer from './rootReducer';
 import firebase from 'firebase';
+import {DB_config} from './config';
 
 const store = createStore(
     rootReducer,
@@ -17,14 +18,7 @@ const store = createStore(
 )
 
 //Credenciales de nuestra APP
-firebase.initializeApp({
-    apiKey: "AIzaSyAjQ9NwlAXj-C4Cj3MAw9s22asP91EGP7I",
-    authDomain: "petinder-fc7b6.firebaseapp.com",
-    databaseURL: "https://petinder-fc7b6.firebaseio.com",
-    projectId: "petinder-fc7b6",
-    storageBucket: "petinder-fc7b6.appspot.com",
-    messagingSenderId: "331629175639"
-});
+firebase.initializeApp(DB_config);
 
 ReactDOM.render(
     <BrowserRouter>
