@@ -4,21 +4,19 @@ import {BrowserRouter} from 'react-router-dom';
 import 'semantic-ui-css/semantic.min.css';
 import { createStore, applyMiddleware } from 'redux'; 
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
-import { composeWithDevTools } from 'redux-devtools-extension';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import rootReducer from './rootReducer';
 import firebase from 'firebase';
 import {DB_config} from './config';
+import reduxThunk from "redux-thunk";
+import reducers from "./reducers";
 
-const store = createStore(
-    rootReducer,
-    composeWithDevTools(applyMiddleware(thunk))
-)
+const store = createStore(reducers, {}, applyMiddleware(reduxThunk));
 
 //Credenciales de nuestra APP
 firebase.initializeApp(DB_config);
+const databaseRef = firebase.database().ref();
+export const todosRef = databaseRef.child("userPets");
 
 ReactDOM.render(
     <BrowserRouter>

@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import PetProfileForm from "../forms/PetProfileForm";
 
 class PetProfilePage extends React.Component {
-    submit = data => 
-        this.props.login(data).then(() => this.props.history.push("/"));
+    //submit = data => 
+      //  this.props.login(data).then(() => this.props.history.push("/"));
 
     render(){
         return(

@@ -5,6 +5,8 @@ import Validator from 'validator';
 import InlineError from '../messages/InlineError';
 import propTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { connect } from "react-redux";
+import { completeToDo } from "../../actions";
 
 const options = [
     { key: 'c', text: 'Gato', value: 'gato' },
@@ -41,6 +43,11 @@ class PetProfileForm extends React.Component {
         loading: false,
         errors: {}
     }
+
+    handleCompleteClick = completeToDoId => {
+        const { completeToDo } = this.props;
+        completeToDo(completeToDoId);
+    };
  
     onChange = e => 
     this.setState({ 
@@ -55,15 +62,15 @@ class PetProfileForm extends React.Component {
         }
     }
 
-    onSubmit = () => {
-        const errors = this.validate(this.state.data);
-        this.setState({errors});
-        if (Object.keys(errors).length === 0){
-            this.props
-                .submit(this.state.data)
-                .catch(err => this.setState({errors: err.response.data.errors}));
-        }
-    };
+    //onSubmit = () => {
+      //  const errors = this.validate(this.state.data);
+        //this.setState({errors});
+        //if (Object.keys(errors).length === 0){
+          //  this.props
+            //    .submit(this.state.data)
+              //  .catch(err => this.setState({errors: err.response.data.errors}));
+        //}
+    //};
 
     validate = (data) => {
         const errors = {};
@@ -74,6 +81,7 @@ class PetProfileForm extends React.Component {
     };
 
     render() {
+        const { todoId, todo } = this.props;
         const { data, errors } = this.state;
         const { value } = this.state
         return (
@@ -145,7 +153,7 @@ class PetProfileForm extends React.Component {
                     onChange={this.onChange}/>
                     {errors.ownerPhone && <InlineError text={errors.ownerPhone} />}
                 </FormField>
-                <Button primary>Registrar</Button>
+                <Button primary onClick={() => this.handleCompleteClick(data)}>Registrar</Button>
             </Form>
         );
     }
@@ -155,4 +163,4 @@ PetProfileForm.propTypes = {
     submit: propTypes.func.isRequired
 };
 
-export default PetProfileForm;
+export default connect(null, { completeToDo })(PetProfileForm);
