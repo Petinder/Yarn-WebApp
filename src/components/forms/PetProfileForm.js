@@ -5,6 +5,8 @@ import Validator from 'validator';
 import InlineError from '../messages/InlineError';
 import propTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import FileUpload from '../../actions/FileUpload';
+import firebase from 'firebase';
 
 const options = [
     { key: 'c', text: 'Gato', value: 'gato' },
@@ -22,6 +24,10 @@ const optionsCastra = [
   ]
 
 class PetProfileForm extends React.Component {
+    constructor(){
+        super();
+        this.handleUpload = this.handleUpload.bind(this);
+    }
     state = {
         data: {
             ownerName: '',
@@ -46,6 +52,31 @@ class PetProfileForm extends React.Component {
     this.setState({ 
         data: { ...this.state.data, [e.target.name]: e.target.value } 
     })
+
+    handleUpload(event){
+        const file = event.target.files[0];
+        const storageRef = firebase.storage().ref(`/Photos/${file.name}`);
+        const task = storageRef.put(file);
+        //cambiar el estado de la barra
+        task.on('state_changed',snapshot => {
+            let percentage = (snapshot.bytesTransferred / snapshot.totalBytes)*100;
+            this.setState({
+                uploadValue: percentage
+            })
+        }, error => {
+            console.log(error.message)
+        }, () => {
+            const record = {
+              photoURL: this.state.user.photoURL,
+              name: this.state.user.displayName,
+              image: task.snapshot.downloadURL
+            };
+            //almacenar en base de datos
+            const dbRef = firebase.database.ref('user');
+            const newPicture = dbRef.push();
+            newPicture.set(record);
+        });
+    }
 
     handleChange = (e, { value }) => this.setState({ value })
 
