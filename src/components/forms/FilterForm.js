@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Button, FormField, Message, Header, Radio, FormRadio, FormInput } from 'semantic-ui-react';
+import { Form, Button, FormField, Message, Radio, FormRadio, FormInput } from 'semantic-ui-react';
 import { DateInput } from 'semantic-ui-calendar-react';
 import Validator from 'validator';
 import InlineError from '../messages/InlineError';
