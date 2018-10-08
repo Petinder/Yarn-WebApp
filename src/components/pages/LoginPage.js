@@ -34,7 +34,7 @@ class LoginPage extends React.Component {
         return(
            <div>
             <br></br>
-            <h1>Petynder</h1>
+            <h1>Petinder</h1>
             <Button primary onClick={this.handleAuth}>Acceder</Button>
            </div> 
         );
