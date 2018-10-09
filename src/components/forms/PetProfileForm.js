@@ -37,12 +37,14 @@ class PetProfileForm extends React.Component {
             petSpecies: "",
             petSex: "",
             petAsexed: "",
+            petBirthDate: "",
             photoURL: "",
-            data: []
+            picturePet: []
         };
         this.handleUpload = this.handleUpload.bind(this);
         this.handleChangeSpecies = this.handleChangeSpecies.bind(this);
         this.handleChangeSex = this.handleChangeSex.bind(this);
+        this.handleChangeDate = this.handleChangeDate.bind(this);
     }
 
     putData(data) {
@@ -68,7 +70,7 @@ class PetProfileForm extends React.Component {
           });
           firebase.database().ref('userPets').on('child_added', snapshot => {
             this.setState({
-              data: this.state.data.concat = () => snapshot.val()
+              picturePet: this.state.picturePet.concat = () => snapshot.val()
             });
           });
     }
@@ -99,7 +101,8 @@ class PetProfileForm extends React.Component {
                 petSpecies: this.state.petSpecies,
                 petSex: this.state.petSex,
                 petAsexed: this.state.petAsexed,
-                //photoURL: task.snapshot.downloadURL
+                petBirthDate: this.state.petBirthDate
+                //photoURL: task.snapshot.ref.getDownloadURL()
             }
           }
           const dbRef = firebase.database().ref('userPets');
@@ -115,12 +118,9 @@ class PetProfileForm extends React.Component {
         data: { ...this.state.data, [e.target.name]: e.target.value } 
     })
 
-    handleChange = (e, { value }) => this.setState({ value })
-
-    handleDateChange = (event, {name, value}) => {
-        if (this.state.hasOwnProperty(name)) {
-          this.setState({ [name]: value });
-        }
+    handleChangeDate = (e, { value }) => {
+        this.setState({ petBirthDate : value });
+        console.log(this.state.petBirthDate);
     }
 
     handleChangeSpecies = (e, { value }) => {
@@ -135,7 +135,7 @@ class PetProfileForm extends React.Component {
 
     handleChangeCastrado = (e, { value }) => {
         this.setState({ petAsexed: value });
-        console.log(this.state.petAsexed);
+        console.log(this.state.petBirthDate);
     }
 
     validate = (data) => {
@@ -147,11 +147,15 @@ class PetProfileForm extends React.Component {
     };
 
     render() {
-        const { data } = this.state;
+        const { ownerPhone } = this.state.ownerPhone;
+        const { ownerAddress } = this.state.ownerAddress;
         const { petSpecies } = this.state.petSpecies;
         const { petSex } = this.state.petSex;
         const { petAsexed } = this.state.petAsexed;
-        const { value } = this.state
+        const { petName } = this.state.petName;
+        const { petBreed } = this.state.petBreed;
+        const { petBirthDate } = this.state.petBirthDate;
+        const { ownerName } = this.state.ownerName;
         return (
             <Form>
                 <Link to="/filter">Filtros</Link>
@@ -164,7 +168,7 @@ class PetProfileForm extends React.Component {
                     id="petName" 
                     name="petName" 
                     placeholder="Nombre"
-                    value={data.petName}
+                    value={petName}
                     onChange={this.onChange}/>
                 </FormField>
                 <Form.Select
@@ -183,7 +187,7 @@ class PetProfileForm extends React.Component {
                     id="petBreed" 
                     name="petBreed" 
                     placeholder="Raza"
-                    value={data.petBreed}
+                    value={petBreed}
                     onChange={this.onChange}/>
                 </FormField>
                 <Form.Select
@@ -196,11 +200,12 @@ class PetProfileForm extends React.Component {
                     onChange={this.handleChangeSex}
                 />
                 <DateInput
-                    name="date"
-                    //value={this.state.date}
-                    placeholder="Fecha nacimiento"
-                    value={data.petBirthDate}
-                    onChange={this.handleChange} 
+                    fluid
+                    label="Fecha Nacimiento"
+                    name="petBirthDate"
+                    placeholder = "Fecha Nacimiento"
+                    value={petBirthDate}
+                    onChange={this.handleChangeDate} 
                 />
                 <Form.Select
                     fluid
@@ -219,7 +224,7 @@ class PetProfileForm extends React.Component {
                     id="ownerName" 
                     name="ownerName" 
                     placeholder="Nombre"
-                    value={data.ownerName}
+                    value={ownerName}
                     onChange={this.onChange}/>
                 </FormField>
                 <FormField>
@@ -229,7 +234,7 @@ class PetProfileForm extends React.Component {
                     id="ownerPhone" 
                     name="ownerPhone" 
                     placeholder="Número de teléfono"
-                    value={data.ownerPhone}
+                    value={ownerPhone}
                     onChange={this.onChange}/>
                 </FormField>
                 <FormField>
@@ -239,7 +244,7 @@ class PetProfileForm extends React.Component {
                     id="ownerAddress" 
                     name="ownerAddress" 
                     placeholder="Dirección"
-                    value={data.ownerAddress}
+                    value={ownerAddress}
                     onChange={this.onChange}/>
                 </FormField>
                 <Button onClick={this.handleUpload} primary>Registrar</Button>
