@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Button, FormField, Message, Header, Radio } from 'semantic-ui-react';
+import { Form, Button, FormField, Header, Grid, Image, Container, Menu, Radio } from 'semantic-ui-react';
 import { DateInput } from 'semantic-ui-calendar-react';
 import Validator from 'validator';
 import InlineError from '../messages/InlineError';
@@ -17,11 +17,6 @@ const options = [
   const optionsSex = [
     { key: 'f', text: 'Hembra', value: 'F' },
     { key: 'm', text: 'Macho', value: 'M' },
-  ]
-
-const optionsCastra = [
-    { key: 's', text: 'Si', value: '1' },
-    { key: 'n', text: 'No', value: '0' },
   ]
 
 class PetProfileForm extends React.Component {
@@ -48,7 +43,7 @@ class PetProfileForm extends React.Component {
     }
 
     putData(data) {
-        //console.log(data.val());
+        console.log(data.val());
         var petsData = data.val();
         var keys = Object.keys(petsData);        
         console.log(keys);
@@ -118,24 +113,26 @@ class PetProfileForm extends React.Component {
         data: { ...this.state.data, [e.target.name]: e.target.value } 
     })
 
-    handleChangeDate = (e, { value }) => {
-        this.setState({ petBirthDate : value });
-        console.log(this.state.petBirthDate);
+    handleChangeDate = (e, { name, value }) => {
+        this.setState({ [name] : value });
     }
 
     handleChangeSpecies = (e, { value }) => {
         this.setState({ petSpecies : value });
-        console.log(this.state.petSpecies);
     }
 
     handleChangeSex = (e, { value }) => {
         this.setState({ petSex: value });
-        console.log(this.state.petSpecies);
     }
-
-    handleChangeCastrado = (e, { value }) => {
-        this.setState({ petAsexed: value });
-        console.log(this.state.petBirthDate);
+    
+    handleLogout () {
+        firebase.auth().signOut().then(function() {
+            // Sign-out successful.
+            console.log("Exito");
+          }).catch(function(error) {
+            // An error happened.
+            console.log("Hay error", error);
+          });
     }
 
     validate = (data) => {
@@ -154,101 +151,144 @@ class PetProfileForm extends React.Component {
         const { petAsexed } = this.state.petAsexed;
         const { petName } = this.state.petName;
         const { petBreed } = this.state.petBreed;
-        const { petBirthDate } = this.state.petBirthDate;
         const { ownerName } = this.state.ownerName;
         return (
             <Form>
-                <Link to="/filter">Filtros</Link>
-                <Header as='h3'>Datos mascota</Header>
-                <FileUpload onUpload={ this.handleUpload }/>
-                <FormField>
-                    <label htmlFor="petName">Nombre</label>
-                    <input 
-                    type="text" 
-                    id="petName" 
-                    name="petName" 
-                    placeholder="Nombre"
-                    value={petName}
-                    onChange={this.onChange}/>
-                </FormField>
-                <Form.Select
-                    fluid
-                    selection
-                    label='Especie'
-                    options={options}
-                    value={petSpecies}
-                    placeholder='Especie'
-                    onChange={this.handleChangeSpecies}
-                />
-                <FormField>
-                    <label htmlFor="petBreed">Raza</label>
-                    <input 
-                    type="text" 
-                    id="petBreed" 
-                    name="petBreed" 
-                    placeholder="Raza"
-                    value={petBreed}
-                    onChange={this.onChange}/>
-                </FormField>
-                <Form.Select
-                    fluid
-                    selection
-                    label='Sexo'
-                    options={optionsSex}
-                    value={petSex}
-                    placeholder='Sexo'
-                    onChange={this.handleChangeSex}
-                />
-                <DateInput
-                    fluid
-                    label="Fecha Nacimiento"
-                    name="petBirthDate"
-                    placeholder = "Fecha Nacimiento"
-                    value={petBirthDate}
-                    onChange={this.handleChangeDate} 
-                />
-                <Form.Select
-                    fluid
-                    selection
-                    label='Castrado'
-                    options={optionsCastra}
-                    value={petAsexed}
-                    placeholder='Castrado'
-                    onChange={this.handleChangeCastrado}
-                />
-                <Header as='h3'>Datos dueño de mascota</Header>
-                <FormField>
-                    <label htmlFor="ownerName">Nombre</label>
-                    <input 
-                    type="text" 
-                    id="ownerName" 
-                    name="ownerName" 
-                    placeholder="Nombre"
-                    value={ownerName}
-                    onChange={this.onChange}/>
-                </FormField>
-                <FormField>
-                    <label htmlFor="ownerPhone">Número de teléfono</label>
-                    <input 
-                    type="text" 
-                    id="ownerPhone" 
-                    name="ownerPhone" 
-                    placeholder="Número de teléfono"
-                    value={ownerPhone}
-                    onChange={this.onChange}/>
-                </FormField>
-                <FormField>
-                    <label htmlFor="ownerAddress">Dirección</label>
-                    <input 
-                    type="text" 
-                    id="ownerAddress" 
-                    name="ownerAddress" 
-                    placeholder="Dirección"
-                    value={ownerAddress}
-                    onChange={this.onChange}/>
-                </FormField>
-                <Button onClick={this.handleUpload} primary>Registrar</Button>
-                <br/>
+                <Menu fixed='top' inverted>
+                <Container>
+                    <Menu.Item as='a' header href = "/filter">
+                    <Image size='mini' src='https://firebasestorage.googleapis.com/v0/b/petinder-fc7b6.appspot.com/o/petinder.ico?alt=media&token=670db3dc-3bf1-452a-b8fd-5bdf83bc23d2' style={{ marginRight: '1.5em' }} />
+                    Petinder
+                    </Menu.Item>
+                    <Menu.Item position='right'>
+                        <Menu.Item as='a' >
+                            <div class="syringe popup icon" data-tooltip="Historial de vacunas" data-position="bottom center">
+                            <i class="syringe icon"></i>
+                            </div>
+                        </Menu.Item>
+                        <Menu.Item as='a'>
+                            <div class="userm popup icon" data-tooltip="Directorio de veterinarios" data-position="bottom left">
+                            <i class="user md icon"></i>
+                            </div>
+                        </Menu.Item>
+                        <Menu.Item as='a'>
+                            <a class="signo popup icon button" data-tooltip="Cerrar sesión" data-position="bottom left" role="button" href = "/login" onClick={this.handleLogout}>
+                            <i class="sign out alternate icon"></i>
+                            </a>
+                        </Menu.Item>
+                    </Menu.Item>
+                </Container>
+                </Menu>
+                <Grid>
+                <Grid.Column width={8}>
+                <br></br>
+                    <Header as='h3'>Datos mascota</Header>
+                    <FileUpload onUpload={ this.handleUpload }/>
+                    <FormField>
+                        <label htmlFor="petName">Nombre</label>
+                        <input 
+                        type="text" 
+                        id="petName" 
+                        name="petName" 
+                        placeholder="Nombre"
+                        value={petName}
+                        onChange={this.onChange}/>
+                    </FormField>
+                    <Form.Select
+                        fluid
+                        selection
+                        label='Especie'
+                        options={options}
+                        value={petSpecies}
+                        placeholder='Especie'
+                        onChange={this.handleChangeSpecies}
+                    />
+                    <FormField>
+                        <label htmlFor="petBreed">Raza</label>
+                        <input 
+                        type="text" 
+                        id="petBreed" 
+                        name="petBreed" 
+                        placeholder="Raza"
+                        value={petBreed}
+                        onChange={this.onChange}/>
+                    </FormField>
+                    <Form.Select
+                        fluid
+                        selection
+                        label='Sexo'
+                        options={optionsSex}
+                        value={petSex}
+                        placeholder='Sexo'
+                        onChange={this.handleChangeSex}
+                    />
+                    <DateInput
+                        fluid
+                        label="Fecha Nacimiento"
+                        name="petBirthDate"
+                        placeholder = "Fecha Nacimiento"
+                        value={this.state.petBirthDate}
+                        onChange={this.handleChangeDate} 
+                    />
+                    <Form.Group inline>
+                    <label>Castrado</label>
+                    <Form.Field>
+                    <Radio
+                        label='Si'
+                        name='petAsexed'
+                        value='1'
+                        checked={this.state.petAsexed === '1'}
+                        onChange={this.handleChangeDate}
+                    />
+                    </Form.Field>
+                    <Form.Field>
+                    <Radio
+                        label='No'
+                        name='petAsexed'
+                        value='0'
+                        checked={this.state.petAsexed === '0'}
+                        onChange={this.handleChangeDate}
+                    />
+                    </Form.Field>
+                    </Form.Group>
+                </Grid.Column>
+                <Grid.Column width={7}>
+                <br></br>
+                    <Header as='h3'>Datos dueño de mascota</Header>
+                    <FormField>
+                        <label htmlFor="ownerName">Nombre</label>
+                        <input 
+                        type="text" 
+                        id="ownerName" 
+                        name="ownerName" 
+                        placeholder="Nombre"
+                        value={ownerName}
+                        onChange={this.onChange}/>
+                    </FormField>
+                    <FormField>
+                        <label htmlFor="ownerPhone">Número de teléfono</label>
+                        <input 
+                        type="text" 
+                        id="ownerPhone" 
+                        name="ownerPhone" 
+                        placeholder="Número de teléfono"
+                        value={ownerPhone}
+                        onChange={this.onChange}/>
+                    </FormField>
+                    <FormField>
+                        <label htmlFor="ownerAddress">Dirección</label>
+                        <input 
+                        type="text" 
+                        id="ownerAddress" 
+                        name="ownerAddress" 
+                        placeholder="Dirección"
+                        value={ownerAddress}
+                        onChange={this.onChange}/>
+                    </FormField>
+                    <Button onClick={this.handleUpload} primary>Registrar</Button>
+                    <br/>
+                </Grid.Column>
+                </Grid>
             </Form>
         );
     }

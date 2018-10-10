@@ -1,6 +1,21 @@
 import React from 'react';
 import firebase from 'firebase';
-import { Button } from 'semantic-ui-react';
+import {
+    Button,
+    Container,
+    Divider,
+    Grid,
+    Header,
+    Icon,
+    Image,
+    List,
+    Menu,
+    Responsive,
+    Segment,
+    Sidebar,
+    Visibility,
+    Form
+  } from 'semantic-ui-react'
 
 class LoginPage extends React.Component {
     //Manejar estados
@@ -24,7 +39,7 @@ class LoginPage extends React.Component {
     componentWillMount(){
         firebase.auth().onAuthStateChanged(user => {
             if(user) {
-                this.props.history.push("/profile");
+                this.props.history.push("/filter");
             }
           });
     }
@@ -32,11 +47,27 @@ class LoginPage extends React.Component {
 
     render(){
         return(
-           <div>
-            <br></br>
-            <h1>Petinder</h1>
-            <Button primary onClick={this.handleAuth}>Acceder</Button>
-           </div> 
+            <div class="ui inverted vertical center aligned segment" style={{ minHeight: 550, padding: '1em 0em' }}>
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
+                <Container text textAlign='center' vertical>
+                    <Header
+                    as='h1'
+                    content='Petinder'
+                    inverted
+                    />
+                    <Header
+                    as='h2'
+                    content='¡Conectando mascotas!'
+                    inverted
+                    />
+                <Button color="orange" onClick={this.handleAuth}>Regístrate</Button>
+                </Container>
+            </div>
         );
     }
 }
