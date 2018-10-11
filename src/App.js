@@ -6,6 +6,8 @@ import PetProfilePage from "./components/pages/PetProfilePage";
 import FilterPage from "./components/pages/FilterPage";
 import VetPage from "./components/pages/VetPage";
 
+import Home from "./components/pages/HomeForm";
+
 const App = () => 
 <div className="ui container">
   <Route path="/" exact component={LoginPage} />
@@ -13,6 +15,7 @@ const App = () =>
   <Route path="/profile" exact component={PetProfilePage} />
   <Route path="/filter" exact component={FilterPage} />
   <Route path="/Vet" exact component={VetPage} />
+  <Route path="/home" exact component={Home} />
 </div>; 
 
 

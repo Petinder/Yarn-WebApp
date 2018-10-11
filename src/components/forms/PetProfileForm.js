@@ -35,21 +35,19 @@ class PetProfileForm extends React.Component {
             petBirthDate: "",
             photoURL: "",
             picturePet: [],
-            task: null
         };
-        this.handleUpload = this.handleUpload.bind(this);
         this.handleChangeSpecies = this.handleChangeSpecies.bind(this);
         this.handleChangeSex = this.handleChangeSex.bind(this);
         this.handleChangeDate = this.handleChangeDate.bind(this);
         this.handleText = this.handleText.bind(this);
+        //this.handleUpload = this.handleUpload.bind(this);
     }
 
     componentWillMount(){
         firebase.auth().onAuthStateChanged(user => {
             this.setState({ user });
           });
-    }
-    componentDidMount(){
+
         firebase.database().ref('userPets').on('child_added', snapshot => {
             this.setState({
               picturePet: this.state.picturePet.concat = () => snapshot.val()
@@ -57,25 +55,38 @@ class PetProfileForm extends React.Component {
           });
     }
 
-    handleUpload (event) {
+    handleUpload = (event) => {
         const file = event.target.files[0];
         const storageRef = firebase.storage().ref(`fotos/${file.name}`);
-        this.setState({task : storageRef.put(file)});
+        const task = storageRef.put(file);
+
+        task.on('state_changed', function(snapshot){
+            // Observe state change events such as progress, pause, and resume
+            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+              case firebase.storage.TaskState.PAUSED: // or 'paused'
+                console.log('Upload is paused');
+                break;
+              case firebase.storage.TaskState.RUNNING: // or 'running'
+                console.log('Upload is running');
+                break;
+            }
+          }, function(error) {
+            console.log('Error ', error);
+          }, function() {
+            task.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                console.log('File available at', downloadURL);
+                this.setState({ photoURL: downloadURL });
+                //console.log('File available at mi', URLE);
+            });
+          });
     }
       
     handleText(){
-        console.log("Task = " + this.state.task)
-        this.state.task.on('state_changed', snapshot => {
-            console.log("Snapshot " + snapshot);
-          let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          this.setState({
-            uploadValue: percentage
-          })
-        }, error => {
-          console.error(error.message);
-        },() => {
-            console.log("url " + this.state.task.snapshot.ref.getDownloadURL()[0])
-        const record = {
+        console.log("URL igual ",this.state.photoURL)
+        /*const record = {
             ownerInfo: {
                 address: this.state.data.ownerAddress,
                 mail: this.state.user.email,
@@ -91,11 +102,10 @@ class PetProfileForm extends React.Component {
                 petBirthDate: this.state.petBirthDate,
                 photoURL: this.state.task.snapshot.ref.getDownloadURL()
             }
-          }
-          const dbRef = firebase.database().ref('userPets');
-          const newPicture = dbRef.push();
-          newPicture.set(record);
-        });
+        }
+        const dbRef = firebase.database().ref('userPets');
+        const Data = dbRef.push();
+        Data.set(record);*/
     }
  
     onChange = e => 
