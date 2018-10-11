@@ -34,36 +34,23 @@ class PetProfileForm extends React.Component {
             petAsexed: "",
             petBirthDate: "",
             photoURL: "",
-            picturePet: []
+            picturePet: [],
+            task: null
         };
         this.handleUpload = this.handleUpload.bind(this);
         this.handleChangeSpecies = this.handleChangeSpecies.bind(this);
         this.handleChangeSex = this.handleChangeSex.bind(this);
         this.handleChangeDate = this.handleChangeDate.bind(this);
-    }
-
-    putData(data) {
-        console.log(data.val());
-        var petsData = data.val();
-        var keys = Object.keys(petsData);        
-        console.log(keys);
-        
-        for (var i=0; i<keys.length; i++){
-            var k = keys[i];
-            var init = petsData[k].petInfo;
-            var NombrePet = init.petName;
-            //console.log(NombrePet);
-            //console.log(init);
-            //var SexoPet = React.createElement('Sexo', init.petSex);
-            //SexoPet.parent('Ser');
-        }
+        this.handleText = this.handleText.bind(this);
     }
 
     componentWillMount(){
         firebase.auth().onAuthStateChanged(user => {
             this.setState({ user });
           });
-          firebase.database().ref('userPets').on('child_added', snapshot => {
+    }
+    componentDidMount(){
+        firebase.database().ref('userPets').on('child_added', snapshot => {
             this.setState({
               picturePet: this.state.picturePet.concat = () => snapshot.val()
             });
@@ -73,9 +60,13 @@ class PetProfileForm extends React.Component {
     handleUpload (event) {
         const file = event.target.files[0];
         const storageRef = firebase.storage().ref(`fotos/${file.name}`);
-        const task = storageRef.put(file);
-    
-        task.on('state_changed', snapshot => {
+        this.setState({task : storageRef.put(file)});
+    }
+      
+    handleText(){
+        console.log("Task = " + this.state.task)
+        this.state.task.on('state_changed', snapshot => {
+            console.log("Snapshot " + snapshot);
           let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           this.setState({
             uploadValue: percentage
@@ -83,6 +74,7 @@ class PetProfileForm extends React.Component {
         }, error => {
           console.error(error.message);
         },() => {
+            console.log("url " + this.state.task.snapshot.ref.getDownloadURL()[0])
         const record = {
             ownerInfo: {
                 address: this.state.data.ownerAddress,
@@ -96,17 +88,15 @@ class PetProfileForm extends React.Component {
                 petSpecies: this.state.petSpecies,
                 petSex: this.state.petSex,
                 petAsexed: this.state.petAsexed,
-                petBirthDate: this.state.petBirthDate
-                //photoURL: task.snapshot.ref.getDownloadURL()
+                petBirthDate: this.state.petBirthDate,
+                photoURL: this.state.task.snapshot.ref.getDownloadURL()
             }
           }
           const dbRef = firebase.database().ref('userPets');
           const newPicture = dbRef.push();
           newPicture.set(record);
         });
-      }
-      
-    
+    }
  
     onChange = e => 
     this.setState({ 
@@ -184,6 +174,19 @@ class PetProfileForm extends React.Component {
                 <br></br>
                     <Header as='h3'>Datos mascota</Header>
                     <FileUpload onUpload={ this.handleUpload }/>
+                     {
+                        this.state.picturePet.map = () => (picturePet => (
+                        <div className="App-card">
+                            <figure className="App-card-image">
+                            <img width="320" src={picturePet.image} />
+                            <figCaption className="App-card-footer">
+                                <img className="App-card-avatar" src={picturePet.photoURL} alt={picturePet.displayName} />
+                                <span className="App-card-name">{picturePet.displayName}</span>
+                            </figCaption>
+                            </figure>
+                        </div>
+                        )).reverse()
+                    }
                     <FormField>
                         <label htmlFor="petName">Nombre</label>
                         <input 
@@ -285,7 +288,7 @@ class PetProfileForm extends React.Component {
                         value={ownerAddress}
                         onChange={this.onChange}/>
                     </FormField>
-                    <Button onClick={this.handleUpload} primary>Registrar</Button>
+                    <Button onClick={this.handleText} primary>Registrar</Button>
                     <br/>
                 </Grid.Column>
                 </Grid>
