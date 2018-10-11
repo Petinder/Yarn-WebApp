@@ -40,7 +40,7 @@ class PetProfileForm extends React.Component {
         this.handleChangeSex = this.handleChangeSex.bind(this);
         this.handleChangeDate = this.handleChangeDate.bind(this);
         this.handleText = this.handleText.bind(this);
-        //this.handleUpload = this.handleUpload.bind(this);
+        this.handleUpload = this.handleUpload.bind(this);
     }
 
     componentWillMount(){
@@ -53,14 +53,15 @@ class PetProfileForm extends React.Component {
               picturePet: this.state.picturePet.concat = () => snapshot.val()
             });
           });
+        
     }
 
-    handleUpload = (event) => {
+    handleUpload(event) {
         const file = event.target.files[0];
         const storageRef = firebase.storage().ref(`fotos/${file.name}`);
         const task = storageRef.put(file);
-
-        task.on('state_changed', function(snapshot){
+        var url = "";
+        task.on('state_changed', (snapshot) => {
             // Observe state change events such as progress, pause, and resume
             // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -73,19 +74,20 @@ class PetProfileForm extends React.Component {
                 console.log('Upload is running');
                 break;
             }
-          }, function(error) {
+          }, (error) => {
             console.log('Error ', error);
-          }, function() {
-            task.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+          }, () => {
+            task.snapshot.ref.getDownloadURL().then((downloadURL) => {
                 console.log('File available at', downloadURL);
-                this.setState({ photoURL: downloadURL });
-                //console.log('File available at mi', URLE);
+                url = downloadURL;
+                this.setState({photoURL: url})
+                console.log('State:' + this.state.photoURL)
             });
           });
     }
       
     handleText(){
-        console.log("URL igual ",this.state.photoURL)
+        console.log("URL igual ", this.state.picturePet);
         /*const record = {
             ownerInfo: {
                 address: this.state.data.ownerAddress,
