@@ -159,7 +159,7 @@ class FilterForm extends React.Component {
         const {sexo, especie, pedigree, castrado} = this.state
         return (
             <Form>
-                <Menu fixed='top' inverted>
+                <Menu fixed='top' inverted color='yellow'>
                 <Container>
                     <Menu.Item as='a' header >
                     <Image size='mini' src='https://firebasestorage.googleapis.com/v0/b/petinder-fc7b6.appspot.com/o/petinder.ico?alt=media&token=670db3dc-3bf1-452a-b8fd-5bdf83bc23d2' style={{ marginRight: '1.5em' }} />
@@ -168,7 +168,7 @@ class FilterForm extends React.Component {
                     <Menu.Item position='right'>
                         <Menu.Item as='a'>
                             <a class="paw popup icon button" data-tooltip="Editar perfil" data-position="bottom right" href = "/profile" role="button">
-                            <i class="paw icon"></i>
+                            <i class="paw icon" ></i>
                             </a>
                         </Menu.Item>
                         <Menu.Item as='a'>

@@ -1,14 +1,11 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import firebase from 'firebase';
 import {
   Button,
   Container,
-  Divider,
-  Grid,
   Header,
   Icon,
-  Image,
-  List,
   Menu,
   Responsive,
   Segment,
@@ -40,10 +37,6 @@ const HomepageHeading = ({ mobile }) => (
         marginTop: mobile ? '0.5em' : '1.5em',
       }}
     />
-    <Button color="orange" size='huge'>
-      Regístrate
-      <Icon name='right arrow' />
-    </Button>
   </Container>
 )
 
@@ -51,8 +44,32 @@ HomepageHeading.propTypes = {
   mobile: PropTypes.bool,
 }
 
-class DesktopContainer extends Component {
-  state = {}
+class DesktopContainer extends React.Component {
+  //Manejar estados
+  constructor (){
+    super();
+    this.state={
+    //objeto
+    user: null,
+    pictures: []
+    };
+  }
+
+  handleAuth(){
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider)
+    .then(result => console.log(`${result.user.email} ha iniciado sesion`))
+    .catch(error => console.log(`Error ${error.code}: ${error.message}`))
+}
+
+//Ciclo de vida
+componentWillMount(){
+    firebase.auth().onAuthStateChanged(user => {
+        if(user) {
+            this.props.history.push("/filter");
+        }
+      });
+}
 
   hideFixedMenu = () => this.setState({ fixed: false })
   showFixedMenu = () => this.setState({ fixed: true })
@@ -70,35 +87,38 @@ class DesktopContainer extends Component {
         >
           <Segment
             inverted
+            color='yellow'
             textAlign='center'
             style={{ minHeight: 700, padding: '1em 0em' }}
             vertical
           >
             <Menu
-              fixed={fixed ? 'top' : null}
-              inverted={!fixed}
-              pointing={!fixed}
-              secondary={!fixed}
+              inverted
+              color='black'
               size='large'
             >
               <Container>
                 <Menu.Item as='a' active>
-                  Home
+                 Contáctanos
                 </Menu.Item>
-                <Menu.Item as='a'>Work</Menu.Item>
-                <Menu.Item as='a'>Company</Menu.Item>
-                <Menu.Item as='a'>Careers</Menu.Item>
+                <Menu.Item as='a'>Términos y condiciones</Menu.Item>
                 <Menu.Item position='right'>
                   <Button as='a' inverted={!fixed}>
                     Iniciar sesión
                   </Button>
-                  <Button as='a' inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }}>
+                  <Button inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }} onClick={this.handleAuth}>
                     Regístrate
                   </Button>
                 </Menu.Item>
               </Container>
             </Menu>
             <HomepageHeading />
+            
+            <Button color="orange" size='huge' onClick={this.handleAuth}>
+              Únete
+              <Icon name='right arrow' />
+            </Button>
+
           </Segment>
         </Visibility>
 
@@ -112,8 +132,32 @@ DesktopContainer.propTypes = {
   children: PropTypes.node,
 }
 
-class MobileContainer extends Component {
-  state = {}
+class MobileContainer extends React.Component {
+  //Manejar estados
+  constructor (){
+    super();
+    this.state={
+    //objeto
+    user: null,
+    pictures: []
+    };
+  }
+
+  handleAuth(){
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider)
+    .then(result => console.log(`${result.user.email} ha iniciado sesion`))
+    .catch(error => console.log(`Error ${error.code}: ${error.message}`))
+}
+
+//Ciclo de vida
+componentWillMount(){
+    firebase.auth().onAuthStateChanged(user => {
+        if(user) {
+            this.props.history.push("/filter");
+        }
+      });
+}
 
   handlePusherClick = () => {
     const { sidebarOpened } = this.state
@@ -130,15 +174,13 @@ class MobileContainer extends Component {
     return (
       <Responsive maxWidth={Responsive.onlyMobile.maxWidth}>
         <Sidebar.Pushable>
-          <Sidebar as={Menu} animation='uncover' inverted vertical visible={sidebarOpened}>
+          <Sidebar as={Menu} animation='uncover' inverted vertical visible={sidebarOpened} >
             <Menu.Item as='a' active>
-              Home
+              Contáctanos
             </Menu.Item>
-            <Menu.Item as='a'>Work</Menu.Item>
-            <Menu.Item as='a'>Company</Menu.Item>
-            <Menu.Item as='a'>Careers</Menu.Item>
-            <Menu.Item as='a'>Log in</Menu.Item>
-            <Menu.Item as='a'>Sign Up</Menu.Item>
+            <Menu.Item as='a'>Términos y condiciones</Menu.Item>
+            <Menu.Item as='a'>Iniciar sesión</Menu.Item>
+            <Menu.Item onClick={this.handleAuth}>Regístrate</Menu.Item>
           </Sidebar>
 
           <Sidebar.Pusher
@@ -151,6 +193,13 @@ class MobileContainer extends Component {
               textAlign='center'
               style={{ minHeight: 350, padding: '1em 0em' }}
               vertical
+              color='yellow'
+            >
+            
+            <Menu
+              inverted
+              color='black'
+              size='large'
             >
               <Container>
                 <Menu inverted pointing secondary size='large'>
@@ -159,15 +208,17 @@ class MobileContainer extends Component {
                   </Menu.Item>
                   <Menu.Item position='right'>
                     <Button as='a' inverted>
-                      Log in
-                    </Button>
-                    <Button as='a' inverted style={{ marginLeft: '0.5em' }}>
-                      Sign Up
+                      Iniciar sesión
                     </Button>
                   </Menu.Item>
                 </Menu>
               </Container>
+              </Menu>
               <HomepageHeading mobile />
+              <Button color="orange" size='huge' onClick={this.handleAuth}>
+                Únete
+                <Icon name='right arrow' />
+              </Button>
             </Segment>
 
             {children}
@@ -193,9 +244,9 @@ ResponsiveContainer.propTypes = {
   children: PropTypes.node,
 }
 
-const HomepageLayout = () => (
+const LoginPage = () => (
   <ResponsiveContainer>
     
   </ResponsiveContainer>
 )
-export default HomepageLayout
+export default LoginPage

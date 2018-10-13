@@ -1,5 +1,6 @@
 import React from 'react';
-import { Form, Button, FormField, Header, Grid, Image, Container, Menu, Radio } from 'semantic-ui-react';
+import { Form, Button, FormField, Header, Grid, Input,
+    Image, Container, Menu, Radio, TextArea, Progress } from 'semantic-ui-react';
 import { DateInput } from 'semantic-ui-calendar-react';
 import Validator from 'validator';
 import InlineError from '../messages/InlineError';
@@ -7,9 +8,8 @@ import propTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import firebase from 'firebase';
 import 'firebase/database';
-import FileUpload from '../../actions/FileUpload';
 
-const options = [
+  const options = [
     { key: 'c', text: 'Gato', value: 'Gato' },
     { key: 'd', text: 'Perro', value: 'Perro' },
   ]
@@ -17,6 +17,54 @@ const options = [
   const optionsSex = [
     { key: 'f', text: 'Hembra', value: 'F' },
     { key: 'm', text: 'Macho', value: 'M' },
+  ]
+
+  let optionsRaza = []
+
+  const optionsGato = [
+    { key: '0', text: 'Ragdoll', value: 'Ragdoll' },
+    { key: '1', text: 'Angora', value: 'Angora' },
+    { key: '2', text: 'British Shorthair', value: 'British Shorthair' },
+    { key: '3', text: 'Scottish Fold', value: 'Scottish Fold' },    
+    { key: '4', text: 'Birmano', value: 'Birmano' },
+    { key: '5', text: 'Persa', value: 'Persa' },
+    { key: '6', text: 'Ruso azul', value: 'Ruso azul' },
+    { key: '7', text: 'Siamés', value: 'Siamés' },
+    { key: '8', text: 'Snowshoe', value: 'Snowshoe' },
+    { key: '9', text: 'Cartujo', value: 'Cartujo' },
+    { key: '10', text: 'Bombay', value: 'Bombay' },
+    { key: '11', text: 'Korat', value: 'Korat' },
+    { key: '12', text: 'Balinés', value: 'Balinés' },
+    { key: '13', text: 'Burmés', value: 'Burmés' },
+    { key: '14', text: 'Habano', value: 'Habano' },
+    { key: '15', text: 'Cornish Rex', value: 'Cornish Rex' },
+    { key: '16', text: 'Oriental', value: 'Oriental' },
+    { key: '17', text: 'Devon Rex', value: 'Devon Rex' },
+    { key: '18', text: 'Seychellois', value: 'Seychellois' },
+    { key: '19', text: 'Tonkinés', value: 'Tonkinés' }
+  ]
+
+  const optionsPerro = [
+    { key: '0', text: 'Husky Siberiano', value: 'Husky Siberiano' },
+    { key: '1', text: 'Golden Retriever', value: 'Golden Retriever' },
+    { key: '2', text: 'Labrador Retriever', value: 'Labrador Retriever' },
+    { key: '3', text: 'Pastor Alemán', value: 'Pastor Alemán' },    
+    { key: '4', text: 'Beagle', value: 'Beagle' },
+    { key: '5', text: 'Alaskan Malamute', value: 'Alaskan Malamute' },
+    { key: '6', text: 'San Bernardo', value: 'San Bernardo' },
+    { key: '7', text: 'Boxer', value: 'Boxer' },
+    { key: '8', text: 'Rottweiler', value: 'Rottweiler' },
+    { key: '9', text: 'Samoyedo', value: 'Samoyedo' },
+    { key: '10', text: 'Pit Bull', value: 'Pit Bull' },
+    { key: '11', text: 'Chow Chow', value: 'Chow Chow' },
+    { key: '12', text: 'Dálmata', value: 'Dálmata' },
+    { key: '13', text: 'Collie', value: 'Collie' },
+    { key: '14', text: 'Carlino', value: 'Carlino' },
+    { key: '15', text: 'Doberman', value: 'Doberman' },
+    { key: '16', text: 'Gran Danés', value: 'Gran Danés' },
+    { key: '17', text: 'Cocker Inglés', value: 'Cocker Inglés' },
+    { key: '18', text: 'Schnauzer', value: 'Schnauzer' },
+    { key: '19', text: 'Chihuahua', value: 'Chihuahua' }
   ]
 
 class PetProfileForm extends React.Component {
@@ -33,12 +81,14 @@ class PetProfileForm extends React.Component {
             petSex: "",
             petAsexed: "",
             petBirthDate: "",
-            photoURL: "",
-            picturePet: [],
+            photoURL: 'https://react.semantic-ui.com/images/wireframe/image.png',
+            uploadValue: 0,
+            petPedigree: "",
+            petDescription: ""
         };
         this.handleChangeSpecies = this.handleChangeSpecies.bind(this);
         this.handleChangeSex = this.handleChangeSex.bind(this);
-        this.handleChangeDate = this.handleChangeDate.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.handleText = this.handleText.bind(this);
         this.handleUpload = this.handleUpload.bind(this);
     }
@@ -47,12 +97,6 @@ class PetProfileForm extends React.Component {
         firebase.auth().onAuthStateChanged(user => {
             this.setState({ user });
           });
-
-        firebase.database().ref('userPets').on('child_added', snapshot => {
-            this.setState({
-              picturePet: this.state.picturePet.concat = () => snapshot.val()
-            });
-          });
         
     }
 
@@ -60,35 +104,23 @@ class PetProfileForm extends React.Component {
         const file = event.target.files[0];
         const storageRef = firebase.storage().ref(`fotos/${file.name}`);
         const task = storageRef.put(file);
-        var url = "";
         task.on('state_changed', (snapshot) => {
-            // Observe state change events such as progress, pause, and resume
-            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log('Upload is ' + progress + '% done');
-            switch (snapshot.state) {
-              case firebase.storage.TaskState.PAUSED: // or 'paused'
-                console.log('Upload is paused');
-                break;
-              case firebase.storage.TaskState.RUNNING: // or 'running'
-                console.log('Upload is running');
-                break;
-            }
+            this.setState({
+                uploadValue: progress
+            })
           }, (error) => {
-            console.log('Error ', error);
+            console.log('Error ', error.message);
           }, () => {
             task.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                console.log('File available at', downloadURL);
-                url = downloadURL;
-                this.setState({photoURL: url})
-                console.log('State:' + this.state.photoURL)
+                this.setState({photoURL: downloadURL, uploadValue: 100})
             });
           });
     }
       
     handleText(){
-        console.log("URL igual ", this.state.picturePet);
-        /*const record = {
+        const record = {
             ownerInfo: {
                 address: this.state.data.ownerAddress,
                 mail: this.state.user.email,
@@ -97,17 +129,20 @@ class PetProfileForm extends React.Component {
             },
             petInfo: {
                 petName: this.state.data.petName,
-                petBreed: this.state.data.petBreed,
+                petBreed: this.state.petBreed,
                 petSpecies: this.state.petSpecies,
                 petSex: this.state.petSex,
                 petAsexed: this.state.petAsexed,
                 petBirthDate: this.state.petBirthDate,
-                photoURL: this.state.task.snapshot.ref.getDownloadURL()
+                petPhoto: this.state.photoURL,
+                petPedigree: this.state.petPedigree,
+                petDescription: this.state.petDescription
             }
         }
-        const dbRef = firebase.database().ref('userPets');
-        const Data = dbRef.push();
-        Data.set(record);*/
+        console.log(record)
+        //const dbRef = firebase.database().ref('userPets');
+        //const Data = dbRef.push();
+        //Data.set(record);
     }
  
     onChange = e => 
@@ -115,12 +150,17 @@ class PetProfileForm extends React.Component {
         data: { ...this.state.data, [e.target.name]: e.target.value } 
     })
 
-    handleChangeDate = (e, { name, value }) => {
+    handleChange = (e, { name, value }) => {
         this.setState({ [name] : value });
     }
 
     handleChangeSpecies = (e, { value }) => {
         this.setState({ petSpecies : value });
+        if (value === 'Gato'){
+            optionsRaza = optionsGato
+        }else{
+            optionsRaza = optionsPerro
+        }
     }
 
     handleChangeSex = (e, { value }) => {
@@ -129,12 +169,14 @@ class PetProfileForm extends React.Component {
     
     handleLogout () {
         firebase.auth().signOut().then(function() {
-            // Sign-out successful.
             console.log("Exito");
           }).catch(function(error) {
-            // An error happened.
             console.log("Hay error", error);
           });
+    }
+
+    handleChangeRaza = (e, { value }) => {
+        this.setState({ petBreed: value });
     }
 
     validate = (data) => {
@@ -150,13 +192,14 @@ class PetProfileForm extends React.Component {
         const { ownerAddress } = this.state.ownerAddress;
         const { petSpecies } = this.state.petSpecies;
         const { petSex } = this.state.petSex;
-        const { petAsexed } = this.state.petAsexed;
         const { petName } = this.state.petName;
         const { petBreed } = this.state.petBreed;
         const { ownerName } = this.state.ownerName;
+        const { petDescription } = this.state.petDescription;
+
         return (
             <Form>
-                <Menu fixed='top' inverted>
+                <Menu fixed='top' inverted color='yellow'>
                 <Container>
                     <Menu.Item as='a' header href = "/filter">
                     <Image size='mini' src='https://firebasestorage.googleapis.com/v0/b/petinder-fc7b6.appspot.com/o/petinder.ico?alt=media&token=670db3dc-3bf1-452a-b8fd-5bdf83bc23d2' style={{ marginRight: '1.5em' }} />
@@ -181,24 +224,26 @@ class PetProfileForm extends React.Component {
                     </Menu.Item>
                 </Container>
                 </Menu>
-                <Grid>
-                <Grid.Column width={8}>
-                <br></br>
+
+                <Grid columns={3} divided>
+                <Grid.Column width={5.5}>
+                    <br></br>
                     <Header as='h3'>Datos mascota</Header>
-                    <FileUpload onUpload={ this.handleUpload }/>
-                     {
-                        this.state.picturePet.map = () => (picturePet => (
-                        <div className="App-card">
-                            <figure className="App-card-image">
-                            <img width="320" src={picturePet.image} />
-                            <figCaption className="App-card-footer">
-                                <img className="App-card-avatar" src={picturePet.photoURL} alt={picturePet.displayName} />
-                                <span className="App-card-name">{picturePet.displayName}</span>
-                            </figCaption>
-                            </figure>
-                        </div>
-                        )).reverse()
-                    }
+
+                    <div position="centered">  
+                        <Image width="250" src={this.state.photoURL} centered />
+                        <br/>
+                        <Progress value={this.state.uploadValue} total='100' progress />
+                        <Input type="file" onChange={this.handleUpload} class="inputfile" id="InputPhoto"/>
+                    </div>
+                    
+                </Grid.Column>
+                <Grid.Column width={6}>
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
+                    
                     <FormField>
                         <label htmlFor="petName">Nombre</label>
                         <input 
@@ -209,25 +254,30 @@ class PetProfileForm extends React.Component {
                         value={petName}
                         onChange={this.onChange}/>
                     </FormField>
+                    <Grid columns='equal'>
+                    <Grid.Column>
                     <Form.Select
                         fluid
                         selection
                         label='Especie'
                         options={options}
                         value={petSpecies}
-                        placeholder='Especie'
+                        placeholder='Escoge una especie'
                         onChange={this.handleChangeSpecies}
                     />
-                    <FormField>
-                        <label htmlFor="petBreed">Raza</label>
-                        <input 
-                        type="text" 
-                        id="petBreed" 
-                        name="petBreed" 
-                        placeholder="Raza"
+                    </Grid.Column>
+                    <Grid.Column>
+                    <Form.Select
+                        fluid
+                        selection
+                        label='Raza'
+                        options={optionsRaza}
                         value={petBreed}
-                        onChange={this.onChange}/>
-                    </FormField>
+                        placeholder='Escoge una raza'
+                        onChange={this.handleChangeRaza}
+                    />
+                    </Grid.Column>
+                    </Grid>
                     <Form.Select
                         fluid
                         selection
@@ -243,17 +293,19 @@ class PetProfileForm extends React.Component {
                         name="petBirthDate"
                         placeholder = "Fecha Nacimiento"
                         value={this.state.petBirthDate}
-                        onChange={this.handleChangeDate} 
+                        onChange={this.handleChange} 
                     />
+                    <Grid columns='equal'>
+                    <Grid.Column>
+                    <label>Esterilización/Castración:</label>
                     <Form.Group inline>
-                    <label>Castrado</label>
                     <Form.Field>
                     <Radio
                         label='Si'
                         name='petAsexed'
                         value='1'
                         checked={this.state.petAsexed === '1'}
-                        onChange={this.handleChangeDate}
+                        onChange={this.handleChange}
                     />
                     </Form.Field>
                     <Form.Field>
@@ -262,12 +314,46 @@ class PetProfileForm extends React.Component {
                         name='petAsexed'
                         value='0'
                         checked={this.state.petAsexed === '0'}
-                        onChange={this.handleChangeDate}
+                        onChange={this.handleChange}
                     />
                     </Form.Field>
                     </Form.Group>
+                    </Grid.Column>
+                    <Grid.Column>
+                    <label>Pedigree:</label>
+                    <Form.Group inline>
+                    <Form.Field>
+                    <Radio
+                        label='Si'
+                        name='petPedigree'
+                        value='1'
+                        checked={this.state.petPedigree === '1'}
+                        onChange={this.handleChange}
+                    />
+                    </Form.Field>
+                    <Form.Field>
+                    <Radio
+                        label='No'
+                        name='petPedigree'
+                        value='0'
+                        checked={this.state.petPedigree === '0'}
+                        onChange={this.handleChange}
+                    />
+                    </Form.Field>
+                    </Form.Group>
+                    </Grid.Column>
+                    </Grid>
+                    <TextArea
+                        id="petDescription" 
+                        name="petDescription"
+                        value={petDescription}
+                        onChange={this.handleChange}
+                        label="Descripción de tu mascota para que los demás la conozcan"
+                        maxlength = "250"
+                        placeholder="Breve descripción de 250 caracteres como máximo..."/>
+
                 </Grid.Column>
-                <Grid.Column width={7}>
+                <Grid.Column width={4}>
                 <br></br>
                     <Header as='h3'>Datos dueño de mascota</Header>
                     <FormField>

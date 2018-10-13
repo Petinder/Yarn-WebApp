@@ -1,21 +1,17 @@
-import React from 'react';
 import firebase from 'firebase';
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import {
-    Button,
-    Container,
-    Divider,
-    Grid,
-    Header,
-    Icon,
-    Image,
-    List,
-    Menu,
-    Responsive,
-    Segment,
-    Sidebar,
-    Visibility,
-    Form
-  } from 'semantic-ui-react'
+  Button,
+  Container,
+  Header,
+  Icon,
+  Menu,
+  Responsive,
+  Segment,
+  Sidebar,
+  Visibility,
+} from 'semantic-ui-react'
 
 class LoginPage extends React.Component {
     //Manejar estados
@@ -47,27 +43,61 @@ class LoginPage extends React.Component {
 
     render(){
         return(
-            <div class="ui inverted vertical center aligned segment" style={{ minHeight: 550, padding: '1em 0em' }}>
-                <br></br>
-                <br></br>
-                <br></br>
-                <br></br>
-                <br></br>
-                <br></br>
-                <Container text textAlign='center' vertical>
-                    <Header
-                    as='h1'
-                    content='Petinder'
-                    inverted
-                    />
-                    <Header
-                    as='h2'
-                    content='¡Conectando mascotas!'
-                    inverted
-                    />
-                <Button color="orange" onClick={this.handleAuth}>Regístrate</Button>
-                </Container>
-            </div>
+            <div class="ui inverted yellow vertical center aligned segment"  style={{ minHeight: 550, padding: '1em 0em' }}>
+            <Segment
+            inverted
+            color='yellow'
+            textAlign='center'
+            style={{ minHeight: 700, padding: '1em 0em' }}
+            vertical>
+            <Menu
+              inverted
+              color='black'
+              size='large'>
+              <Container>
+                <Menu.Item as='a' active>
+                 Contáctanos
+                </Menu.Item>
+                <Menu.Item as='a'>Términos y condiciones</Menu.Item>
+                <Menu.Item position='right'>
+                  <Button as='a' inverted onClick={this.handleAuth}>
+                    Iniciar sesión
+                  </Button>
+                  <Button inverted style={{ marginLeft: '0.5em' }} onClick={this.handleAuth}>
+                    Regístrate
+                  </Button>
+                </Menu.Item>
+              </Container>
+            </Menu>
+            <Container text>
+                <Header
+                as='h1'
+                content='Petinder'
+                inverted
+                style={{
+                    fontSize: '4em',
+                    fontWeight: 'normal',
+                    marginBottom: 0,
+                    marginTop: '3em',
+                }}
+                />
+                <Header
+                as='h2'
+                content='¡Conectando mascotas!'
+                inverted
+                style={{
+                    fontSize: '1.7em',
+                    fontWeight: 'normal',
+                    marginTop: '1.5em',
+                }}
+                />
+                <Button color="orange" size='huge' onClick={this.handleAuth}>
+                Únete
+                <Icon name='right arrow' />
+                </Button>
+            </Container>
+            </Segment>
+        </div>
         );
     }
 }
