@@ -1,17 +1,17 @@
 import React from 'react';
-import VetForm from "../forms/VetForm";
+import HistForm from "../forms/HistForm";
 
-class VetPage extends React.Component {
+class HistPage extends React.Component {
     submit = data => 
         this.props.login(data).then(() => this.props.history.push("/"));
 
     render(){
         return(
            <div>
-            <VetForm submit={this.submit} />
+            <HistForm submit={this.submit} />
            </div> 
         );
     }
 }
 
-export default VetPage;
+export default HistPage;

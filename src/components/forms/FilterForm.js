@@ -1,7 +1,6 @@
 import React from 'react';
 import { Form, Radio, FormInput, Image, Grid, Container, Menu, Advertisement } from 'semantic-ui-react';
 import firebase from 'firebase';
-import PetProfileForm from '../forms/PetProfileForm';
 
 const RadioExampleToggle = () => <Radio toggle />
 
@@ -54,8 +53,8 @@ class FilterForm extends React.Component {
                                     "class='ui medium right floated image'/>"+
                                 "<div class='header'>" + snapshot.child('petInfo/petName').val() + "</div>"+
                                 "<div class='meta'>" + snapshot.child('petInfo/petBreed').val()+"</div>"+
-                                "<div class='description'>Nací el <strong>"+
-                                    snapshot.child('petInfo/petBirthDate').val() +"</strong> y me gusta (descripción que ingrese el dueño)"+
+                                "<div class='description'>"+
+                                    snapshot.child('petInfo/petDescription').val() +
                                 "</div></div>"+
                                 "<div class='extra content'>"+
                                 "<div class='ui two buttons'>"+
@@ -172,14 +171,14 @@ class FilterForm extends React.Component {
                             </a>
                         </Menu.Item>
                         <Menu.Item as='a'>
-                            <div class="syringe popup icon" data-tooltip="Historial de vacunas" data-position="bottom center">
+                            <a class="syringe popup icon" data-tooltip="Historial de vacunas" data-position="bottom center" href = "/history" role="button">
                             <i class="syringe icon"></i>
-                            </div>
+                            </a>
                         </Menu.Item>
                         <Menu.Item as='a'>
-                            <div class="userm popup icon" data-tooltip="Directorio de veterinarios" data-position="bottom left">
+                            <a class="userm popup icon" data-tooltip="Directorio de veterinarios" data-position="bottom left" href = "/Vet" role="button">
                             <i class="user md icon"></i>
-                            </div>
+                            </a>
                         </Menu.Item>
                         <Menu.Item as='a'>
                             <a class="signo popup icon button" data-tooltip="Cerrar sesión" data-position="bottom left" role="button" href = "/login" onClick={this.handleLogout}>
