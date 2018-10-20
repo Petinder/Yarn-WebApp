@@ -256,12 +256,12 @@ class PetProfileForm extends React.Component {
                     </Menu.Item>
                     <Menu.Item position='right'>
                         <Menu.Item as='a' >
-                            <div class="syringe popup icon" data-tooltip="Historial de vacunas" data-position="bottom center">
+                            <div class="syringe popup icon" data-tooltip="Historial de vacunas" data-position="bottom center" href = "/history" role="button">
                             <i class="syringe icon"></i>
                             </div>
                         </Menu.Item>
                         <Menu.Item as='a'>
-                            <div class="userm popup icon" data-tooltip="Directorio de veterinarios" data-position="bottom left">
+                            <div class="userm popup icon" data-tooltip="Directorio de veterinarios" data-position="bottom left" href = "/Vet" role="button">
                             <i class="user md icon"></i>
                             </div>
                         </Menu.Item>
