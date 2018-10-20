@@ -1,10 +1,34 @@
 import React from 'react';
 import { Form, Button, FormField, Message, Header, Radio, FormRadio, Table,
     Image, Grid, Container, Menu, Icon } from 'semantic-ui-react';
-    
 import icono from './petinder.ico';
+import firebase from 'firebase';
 
 class HistForm extends React.Component {
+
+    componentWillMount(){
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {             
+                var key = "";
+                firebase.database().ref('userPets').orderByChild('ownerInfo/mail').equalTo(user.email).once("value").then((snapshot) => {
+                    if (snapshot.exists()){
+                        console.log(snapshot.val());
+                        snapshot.forEach((childSnapshot) => {
+                            key = childSnapshot.key;
+                            this.getUserId(key);
+                        });
+                        }
+                    })
+            } else {
+                window.location.pathname = '/login'
+            }
+          });
+    }
+
+    getUserId(key){
+        this.setState({userId: key});
+        console.log("User logged: " + key);
+    }
 
     render() {
         return (
