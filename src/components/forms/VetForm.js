@@ -1,8 +1,40 @@
 import React from 'react';
 import { Form, Button, FormField, Message, Header, Radio, FormRadio, Table,
     Image, Grid, Container, Menu, Icon, Card } from 'semantic-ui-react';
+import firebase from 'firebase';
 
 class VetForm extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            rootRef: firebase.database().ref().child('userVets'),
+        };
+      }
+    
+    componentDidMount() {
+        const card = document.querySelector("#cardVets");
+        card.innerHTML = "";
+
+        this.state.rootRef.on('child_added', snapshot => {
+            card.innerHTML += "<div class='ui card'>"+
+                                "<div class='ui yellow fluid card'>"+
+                                  "<div class='content'>"+
+                                    "<img src='https://react.semantic-ui.com/images/avatar/large/steve.jpg' class='ui mini right floated image' />"+
+                                    "<div class='header'>"+snapshot.child('vetInfo/name').val()+"</div>"+
+                                    "<div class='meta'>"+snapshot.child('services/clinicName').val()+"</div>"+
+                                    "<div class='description'>"+snapshot.child('services/vetDescription').val()+
+                                    "</div>"+
+                                    "</div>"+
+                                    "<div class='extra content'>"+
+                                    "<div class='ui two buttons'>"+
+                                    "<button class='ui green basic button' role='button'>Horarios</button>"+
+                                    "<button class='ui orange basic button' role='button'>Mas información</button>"+
+                                    "</div>"+
+                                  "</div>"+
+                                "</div>"+
+                               "</div>"
+        });
+    }
 
     render() {
         return (
@@ -38,67 +70,8 @@ class VetForm extends React.Component {
                 <br></br>
                 <br></br>
 
-
-                <Card.Group>
-                    <Card color='yellow'>
-                    <Card.Content>
-                        <Image floated='right' size='mini' src='https://react.semantic-ui.com/images/avatar/large/steve.jpg' />
-                        <Card.Header>Javier Argueta</Card.Header>
-                        <Card.Meta>PALVET</Card.Meta>
-                        <Card.Description>
-                        El mejor lugar para curar a tu mascota.
-                        </Card.Description>
-                    </Card.Content>
-                    <Card.Content extra>
-                        <div className='ui two buttons'>
-                        <Button basic color='green'>
-                            Horarios
-                        </Button>
-                        <Button basic color='yellow'>
-                            Más información
-                        </Button>
-                        </div>
-                    </Card.Content>
-                    </Card>
-                    <Card color='yellow'>
-                    <Card.Content>
-                        <Image floated='right' size='mini' src='https://react.semantic-ui.com/images/avatar/large/molly.png' />
-                        <Card.Header>Carrillo Palvet</Card.Header>
-                        <Card.Meta>Hospital veterinario</Card.Meta>
-                        <Card.Description>
-                        Estamos para servir a tu mascota.
-                        </Card.Description>
-                    </Card.Content>
-                    <Card.Content extra>
-                        <div className='ui two buttons'>
-                        <Button basic color='green'>
-                            Horarios
-                        </Button>
-                        <Button basic color='yellow'>
-                            Más información
-                        </Button>
-                        </div>
-                    </Card.Content>
-                    </Card>
-                    <Card color='yellow'>
-                    <Card.Content>
-                        <Image floated='right' size='mini' src='https://react.semantic-ui.com/images/avatar/large/jenny.jpg' />
-                        <Card.Header>Lopez Dogtors</Card.Header>
-                        <Card.Meta>Veterinaria, Dres. Bobadilla</Card.Meta>
-                        <Card.Description>Más que una veterinaria, somos tu familia.</Card.Description>
-                    </Card.Content>
-                    <Card.Content extra>
-                        <div className='ui two buttons'>
-                        <Button basic color='green'>
-                            Horarios
-                        </Button>
-                        <Button basic color='yellow'>
-                            Más información
-                        </Button>
-                        </div>
-                    </Card.Content>
-                    </Card>
-                </Card.Group>
+                <div class='ui cards' id ='cardVets'> </div>
+                
             </Form>
         );
     }

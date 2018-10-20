@@ -2,8 +2,6 @@ import React from 'react';
 import { Form, Radio, FormInput, Image, Grid, Container, Menu, Advertisement } from 'semantic-ui-react';
 import firebase from 'firebase';
 
-const RadioExampleToggle = () => <Radio toggle />
-
 const OpcionesEspecie = [
     { key: 'c', text: 'Gato', value: 'Gato' },
     { key: 'd', text: 'Perro', value: 'Perro' },
@@ -21,8 +19,6 @@ class FilterForm extends React.Component {
             radio: "",
             sexo: "",
             especie: "",
-            pedigree: false,
-            castrado: false,
             rootRef: firebase.database().ref().child('userPets'),
         };
     
@@ -33,17 +29,11 @@ class FilterForm extends React.Component {
 
     handleChangeR = (e, { value }) => {
         this.setState({ especie: value })
-        console.log(value);
         this.componentRand(value, 'especie');
     }
     handleChangeS = (e, { value }) => {
         this.setState({ sexo: value })
-        console.log(value);
         this.componentRand(value, 'sexo');
-    }
-    changeRadio = e => {
-        this.setState({ [e.target.name]: e.target.checked });
-        console.log("Valor ", e.target.checked, "nombre ", e.target.name)
     }
 
     tarjetas(snapshot, card){
@@ -73,7 +63,6 @@ class FilterForm extends React.Component {
     }
 
     componentRand(value, filtro) {
-        console.log("INGRESO");
         //const rootRef = firebase.database().ref().child('userPets');
         const card = document.querySelector("#cardPets");
         card.innerHTML = "";
@@ -114,7 +103,7 @@ class FilterForm extends React.Component {
                     }else{
                         if(snapshot.child('petInfo/petSpecies').val() === 'Perro'){
                             this.tarjetas(snapshot, card)
-                        } 
+                        }
                     }
                 });
             }else{
@@ -133,8 +122,16 @@ class FilterForm extends React.Component {
         }        
     }
 
+    handleClick = () =>{
+        if (this.state.especie != "" || this.state.sexo!= ""){
+            this.setState({ especie: "", sexo: "" });
+            this.componentDidMount();
+        }
+    }
+
     componentDidMount() {
         const card = document.querySelector("#cardPets");
+        card.innerHTML = "";
 
         this.state.rootRef.on('child_added', snapshot => {
             card.innerHTML += "<div class='ui card'>"+
@@ -155,7 +152,7 @@ class FilterForm extends React.Component {
     }
 
     render() {
-        const {sexo, especie, pedigree, castrado} = this.state
+        const {sexo, especie} = this.state
         return (
             <Form>
                 <Menu fixed='top' inverted color='yellow'>
@@ -215,25 +212,7 @@ class FilterForm extends React.Component {
                             onChange={this.handleChangeS}
                         />
                         <br/><br/>
-                        <label>Otras opciones:</label>
-                        <Form.Group inline>
-                            <FormInput
-                                label='Pedigree' 
-                                name="pedigree" 
-                                type='checkbox' 
-                                checked={pedigree}
-                                onChange={this.changeRadio}
-                            />
-                            <FormInput 
-                                label='Castrado' 
-                                name="castrado" 
-                                type='checkbox' 
-                                checked={castrado} 
-                                onChange={this.changeRadio}
-                            />
-                        </Form.Group>
-                        <br/><br/>
-                        <button class="negative ui button">Eliminar filtro</button>
+                        <button class="negative ui button" onClick = {this.handleClick}>Eliminar filtro</button>
                     </div>
                 </Grid.Column>
                 <Grid.Column width={9}>
