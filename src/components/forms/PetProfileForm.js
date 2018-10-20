@@ -91,17 +91,17 @@ class PetProfileForm extends React.Component {
             photoURL: 'https://react.semantic-ui.com/images/wireframe/image.png',
             uploadValue: 0,
             petPedigree: "",
-            petDescription: ""
+            petDescription: "",
+            userId: "",
+            isNew: true
         };
 
     }
 
     componentWillMount(){
-        console.log("willmount");
         firebase.auth().onAuthStateChanged(user => {
             if (user) {              
                 this.setState({ user, userMail: user.email });
-                
             } else {
                 window.location.pathname = '/login'
             }
@@ -150,7 +150,9 @@ class PetProfileForm extends React.Component {
             photoURL: snapshot.child(key + '/petInfo/petPhoto').val(),
             uploadValue: 0,
             petPedigree: snapshot.child(key + '/petInfo/petPedigree').val(),
-            petDescription: snapshot.child(key + '/petInfo/petDescription').val()
+            petDescription: snapshot.child(key + '/petInfo/petDescription').val(),
+            userId: key,
+            isNew: false
         });
         console.log(this.state.photoURL);
         this.setState({petBreed: snapshot.child(key + '/petInfo/petBreed').val()});
@@ -197,9 +199,16 @@ class PetProfileForm extends React.Component {
             }
         }
         console.log(record)
-        const dbRef = firebase.database().ref('userPets');
-        const Data = dbRef.push();
-        Data.set(record);
+        console.log("UserId: " + this.state.userId);
+        if (this.state.userId == ""){
+            var dbRef = firebase.database().ref('userPets');
+            var Data = dbRef.push();
+            Data.set(record);
+        }else{
+            var dbRef = firebase.database().ref('userPets/' + this.state.userId);
+            dbRef.set(record);
+        }
+    
     }
  
 
@@ -391,6 +400,8 @@ class PetProfileForm extends React.Component {
                     </Form.Group>
                     </Grid.Column>
                     </Grid>
+                    <br/>
+                    <label>Descripción</label>
                     <TextArea
                         id="petDescription" 
                         name="petDescription"
@@ -434,7 +445,11 @@ class PetProfileForm extends React.Component {
                         value={this.state.ownerAddress}
                         onChange={this.onChange}/>
                     </FormField>
-                    <Button onClick={this.handleText} primary>Registrar</Button>
+                    <Form.Button
+                        content={this.state.isNew ? 'Registrar' : 'Actualizar'}
+                        color = 'blue'
+                        onClick={this.handleText}
+                    />
                     <br/>
                 </Grid.Column>
                 </Grid>
