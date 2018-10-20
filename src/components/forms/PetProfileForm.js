@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Button, FormField, Header, Grid, Input,
-    Image, Container, Menu, Radio, TextArea, Progress } from 'semantic-ui-react';
+    Image, Container, Menu, Radio, TextArea, Progress, Dimmer, Loader, Segment } from 'semantic-ui-react';
 import { DateInput } from 'semantic-ui-calendar-react';
 import Validator from 'validator';
 import InlineError from '../messages/InlineError';
@@ -70,8 +70,15 @@ import 'firebase/database';
 class PetProfileForm extends React.Component {
     constructor () {
         super();
+        this.handleChangeSpecies = this.handleChangeSpecies.bind(this);
+        this.handleChangeSex = this.handleChangeSex.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleText = this.handleText.bind(this);
+        this.handleUpload = this.handleUpload.bind(this);
+        this.onChange = this.onChange.bind(this);
         this.state = {
             user: null,
+            userMail: "",
             ownerAddress: "",
             ownerName: "",
             ownerPhone: "",
@@ -86,18 +93,67 @@ class PetProfileForm extends React.Component {
             petPedigree: "",
             petDescription: ""
         };
-        this.handleChangeSpecies = this.handleChangeSpecies.bind(this);
-        this.handleChangeSex = this.handleChangeSex.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleText = this.handleText.bind(this);
-        this.handleUpload = this.handleUpload.bind(this);
+
     }
 
     componentWillMount(){
+        console.log("willmount");
         firebase.auth().onAuthStateChanged(user => {
-            this.setState({ user });
+            if (user) {              
+                this.setState({ user, userMail: user.email });
+                
+            } else {
+                window.location.pathname = '/login'
+            }
           });
         
+    }
+
+    componentDidMount(){
+        console.log("didmount")
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {              
+                this.setState({ user, userMail: user.email });
+                var key = "";
+                firebase.database().ref('userPets').orderByChild('ownerInfo/mail').equalTo(user.email).once("value").then((snapshot) => {
+                    if (snapshot.exists()){
+                        console.log(snapshot.val());
+                        snapshot.forEach((childSnapshot) => {
+                            key = childSnapshot.key;
+                            this.profile(snapshot, key);
+                        });
+                        }
+                    })
+            } else {
+                window.location.pathname = '/login'
+            }
+          });
+    }
+
+    profile (snapshot, key) {
+        var currOption = [];
+        if (snapshot.child(key + '/petInfo/petSpecies').val() === 'Gato'){
+            currOption = optionsGato
+        }else{
+            currOption = optionsPerro
+        }
+        this.setState({
+            ownerAddress: snapshot.child(key + '/ownerInfo/address').val(),
+            ownerName: snapshot.child(key + '/ownerInfo/name').val(),
+            ownerPhone: snapshot.child(key + '/ownerInfo/phone').val(),
+            petName: snapshot.child(key + '/petInfo/petName').val(),
+            petSpecies: snapshot.child(key + '/petInfo/petSpecies').val(),
+            optionsRaza: currOption,
+            petSex: snapshot.child(key + '/petInfo/petSex').val(),
+            petAsexed: snapshot.child(key + '/petInfo/petAsexed').val(),
+            petBirthDate:snapshot.child(key + '/petInfo/petBirthDate').val(),
+            photoURL: snapshot.child(key + '/petInfo/petPhoto').val(),
+            uploadValue: 0,
+            petPedigree: snapshot.child(key + '/petInfo/petPedigree').val(),
+            petDescription: snapshot.child(key + '/petInfo/petDescription').val()
+        });
+        console.log(this.state.photoURL);
+        this.setState({petBreed: snapshot.child(key + '/petInfo/petBreed').val()});
     }
 
     handleUpload(event) {
@@ -120,15 +176,16 @@ class PetProfileForm extends React.Component {
     }
       
     handleText(){
+        console.log(this.state.ownerAddress);
         const record = {
             ownerInfo: {
-                address: this.state.data.ownerAddress,
+                address: this.state.ownerAddress,
                 mail: this.state.user.email,
-                name: this.state.data.ownerName,
-                phone: this.state.data.ownerPhone
+                name: this.state.ownerName,
+                phone: this.state.ownerPhone
             },
             petInfo: {
-                petName: this.state.data.petName,
+                petName: this.state.petName,
                 petBreed: this.state.petBreed,
                 petSpecies: this.state.petSpecies,
                 petSex: this.state.petSex,
@@ -140,15 +197,16 @@ class PetProfileForm extends React.Component {
             }
         }
         console.log(record)
-        //const dbRef = firebase.database().ref('userPets');
-        //const Data = dbRef.push();
-        //Data.set(record);
+        const dbRef = firebase.database().ref('userPets');
+        const Data = dbRef.push();
+        Data.set(record);
     }
  
-    onChange = e => 
-    this.setState({ 
-        data: { ...this.state.data, [e.target.name]: e.target.value } 
-    })
+
+    onChange(event) {
+        this.setState({[event.target.name]: ""});
+        this.setState({[event.target.name]: event.target.value});
+    }
 
     handleChange = (e, { name, value }) => {
         this.setState({ [name] : value });
@@ -188,15 +246,6 @@ class PetProfileForm extends React.Component {
     };
 
     render() {
-        const { ownerPhone } = this.state.ownerPhone;
-        const { ownerAddress } = this.state.ownerAddress;
-        const { petSpecies } = this.state.petSpecies;
-        const { petSex } = this.state.petSex;
-        const { petName } = this.state.petName;
-        const { petBreed } = this.state.petBreed;
-        const { ownerName } = this.state.ownerName;
-        const { petDescription } = this.state.petDescription;
-
         return (
             <Form>
                 <Menu fixed='top' inverted color='yellow'>
@@ -242,8 +291,7 @@ class PetProfileForm extends React.Component {
                 <br></br>
                 <br></br>
                 <br></br>
-                <br></br>
-                    
+                <br></br>  
                     <FormField>
                         <label htmlFor="petName">Nombre</label>
                         <input 
@@ -251,7 +299,7 @@ class PetProfileForm extends React.Component {
                         id="petName" 
                         name="petName" 
                         placeholder="Nombre"
-                        value={petName}
+                        value={this.state.petName}
                         onChange={this.onChange}/>
                     </FormField>
                     <Grid columns='equal'>
@@ -261,7 +309,7 @@ class PetProfileForm extends React.Component {
                         selection
                         label='Especie'
                         options={options}
-                        value={petSpecies}
+                        value={this.state.petSpecies}
                         placeholder='Escoge una especie'
                         onChange={this.handleChangeSpecies}
                     />
@@ -272,7 +320,7 @@ class PetProfileForm extends React.Component {
                         selection
                         label='Raza'
                         options={optionsRaza}
-                        value={petBreed}
+                        value={this.state.petBreed}
                         placeholder='Escoge una raza'
                         onChange={this.handleChangeRaza}
                     />
@@ -283,7 +331,7 @@ class PetProfileForm extends React.Component {
                         selection
                         label='Sexo'
                         options={optionsSex}
-                        value={petSex}
+                        value={this.state.petSex}
                         placeholder='Sexo'
                         onChange={this.handleChangeSex}
                     />
@@ -303,7 +351,7 @@ class PetProfileForm extends React.Component {
                     <Radio
                         label='Si'
                         name='petAsexed'
-                        value='1'
+                        value={this.state.petAsexed}
                         checked={this.state.petAsexed === '1'}
                         onChange={this.handleChange}
                     />
@@ -312,7 +360,7 @@ class PetProfileForm extends React.Component {
                     <Radio
                         label='No'
                         name='petAsexed'
-                        value='0'
+                        value={this.state.petAsexed}
                         checked={this.state.petAsexed === '0'}
                         onChange={this.handleChange}
                     />
@@ -346,8 +394,8 @@ class PetProfileForm extends React.Component {
                     <TextArea
                         id="petDescription" 
                         name="petDescription"
-                        value={petDescription}
-                        onChange={this.handleChange}
+                        value={this.state.petDescription}
+                        onChange={this.onChange}
                         label="Descripción de tu mascota para que los demás la conozcan"
                         maxlength = "250"
                         placeholder="Breve descripción de 250 caracteres como máximo..."/>
@@ -363,7 +411,7 @@ class PetProfileForm extends React.Component {
                         id="ownerName" 
                         name="ownerName" 
                         placeholder="Nombre"
-                        value={ownerName}
+                        value={this.state.ownerName}
                         onChange={this.onChange}/>
                     </FormField>
                     <FormField>
@@ -373,7 +421,7 @@ class PetProfileForm extends React.Component {
                         id="ownerPhone" 
                         name="ownerPhone" 
                         placeholder="Número de teléfono"
-                        value={ownerPhone}
+                        value={this.state.ownerPhone}
                         onChange={this.onChange}/>
                     </FormField>
                     <FormField>
@@ -383,7 +431,7 @@ class PetProfileForm extends React.Component {
                         id="ownerAddress" 
                         name="ownerAddress" 
                         placeholder="Dirección"
-                        value={ownerAddress}
+                        value={this.state.ownerAddress}
                         onChange={this.onChange}/>
                     </FormField>
                     <Button onClick={this.handleText} primary>Registrar</Button>
