@@ -10,6 +10,31 @@ class VetForm extends React.Component {
             rootRef: firebase.database().ref().child('userVets'),
         };
       }
+
+      componentWillMount(){
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {             
+                var key = "";
+                firebase.database().ref('userPets').orderByChild('ownerInfo/mail').equalTo(user.email).once("value").then((snapshot) => {
+                    if (snapshot.exists()){
+                        console.log(snapshot.val());
+                        snapshot.forEach((childSnapshot) => {
+                            key = childSnapshot.key;
+                            this.getUserId(key);
+                        });
+                        }
+                    })
+            } else {
+                window.location.pathname = '/login'
+            }
+          });
+    }
+
+    getUserId(key){
+        this.setState({userId: key});
+        console.log("User logged: " + key);
+    }
+
     
     componentDidMount() {
         const card = document.querySelector("#cardVets");

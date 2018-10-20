@@ -19,6 +19,7 @@ class FilterForm extends React.Component {
             radio: "",
             sexo: "",
             especie: "",
+            userId: "",
             rootRef: firebase.database().ref().child('userPets'),
         };
     
@@ -52,6 +53,7 @@ class FilterForm extends React.Component {
                                     "<button class='ui red basic button' role='button'>Decline</button>"+
                                 "</div></div></div>"
     }
+
     handleLogout () {
         firebase.auth().signOut().then(function() {
             // Sign-out successful.
@@ -60,6 +62,30 @@ class FilterForm extends React.Component {
             // An error happened.
             console.log("Hay error", error);
           });
+    }
+
+    componentWillMount(){
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {             
+                var key = "";
+                firebase.database().ref('userPets').orderByChild('ownerInfo/mail').equalTo(user.email).once("value").then((snapshot) => {
+                    if (snapshot.exists()){
+                        console.log(snapshot.val());
+                        snapshot.forEach((childSnapshot) => {
+                            key = childSnapshot.key;
+                            this.getUserId(key);
+                        });
+                        }
+                    })
+            } else {
+                window.location.pathname = '/login'
+            }
+          });
+    }
+
+    getUserId(key){
+        this.setState({userId: key});
+        console.log("User logged: " + key);
     }
 
     componentRand(value, filtro) {
@@ -134,6 +160,7 @@ class FilterForm extends React.Component {
         card.innerHTML = "";
 
         this.state.rootRef.on('child_added', snapshot => {
+            console.log("child key: " + snapshot.key);
             card.innerHTML += "<div class='ui card'>"+
                             "<div class='content'>"+
                             "<img src='" + snapshot.child('petInfo/petPhoto').val()+"'"+
@@ -148,7 +175,7 @@ class FilterForm extends React.Component {
                                 "<button class='ui green basic button' role='button'>Agregar</button>"+
                                 "<button class='ui red basic button' role='button'>Ignorar</button>"+
                             "</div></div></div>"
-        });
+        }); 
     }
 
     render() {
