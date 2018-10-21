@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, Radio, FormInput, Image, Grid, Container, Menu, Advertisement } from 'semantic-ui-react';
 import firebase from 'firebase';
+import icono from './petinder.ico';
 
 class ContactoForm extends React.Component {
     constructor() {
@@ -33,7 +34,7 @@ class ContactoForm extends React.Component {
                 <Menu fixed='top' inverted color='yellow'>
                 <Container>
                     <Menu.Item as='a' header href = "/login">
-                    <Image size='mini' src='https://firebasestorage.googleapis.com/v0/b/petinder-fc7b6.appspot.com/o/petinder.ico?alt=media&token=670db3dc-3bf1-452a-b8fd-5bdf83bc23d2' style={{ marginRight: '1.5em' }} />
+                    <Image size='mini' src={icono} style={{ marginRight: '1.5em' }} />
                     Petinder
                     </Menu.Item>
                     <Menu.Item position='right'>
