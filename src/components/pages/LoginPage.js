@@ -21,6 +21,7 @@ class LoginPage extends React.Component {
         this.state={
         //objeto
         user: null,
+        userId: ""
     };
   }
 
@@ -35,10 +36,29 @@ class LoginPage extends React.Component {
     componentWillMount(){
         firebase.auth().onAuthStateChanged(user => {
             if(user) {
-                this.props.history.push("/filter");
+                this.setState({ user, userMail: user.email });
+                var key = "";
+                firebase.database().ref('userPets').orderByChild('ownerInfo/mail').equalTo(user.email).once("value").then((snapshot) => {
+                    if (snapshot.exists()){
+                        console.log(snapshot.val());
+                        snapshot.forEach((childSnapshot) => {
+                            key = childSnapshot.key;
+                            this.getUserId(key);
+                        });
+                        this.props.history.push("/filter");
+                    }else{
+                        this.props.history.push("/profile");
+                    }
+                })   
             }
-          });
+          });     
     }
+
+    getUserId(key){
+        this.setState({userId: key});
+        console.log("User logged: " + key);
+    }
+
 
     render(){
 

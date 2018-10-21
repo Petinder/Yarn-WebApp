@@ -110,7 +110,6 @@ class PetProfileForm extends React.Component {
     }
 
     componentDidMount(){
-        console.log("didmount")
         firebase.auth().onAuthStateChanged(user => {
             if (user) {              
                 this.setState({ user, userMail: user.email });
