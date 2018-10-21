@@ -8,6 +8,7 @@ import propTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import firebase from 'firebase';
 import 'firebase/database';
+import icono from './petinder.ico';
 
   const options = [
     { key: 'c', text: 'Gato', value: 'Gato' },
@@ -260,7 +261,7 @@ class PetProfileForm extends React.Component {
                 <Menu fixed='top' inverted color='yellow'>
                 <Container>
                     <Menu.Item as='a' header href = "/filter">
-                    <Image size='mini' src='https://firebasestorage.googleapis.com/v0/b/petinder-fc7b6.appspot.com/o/petinder.ico?alt=media&token=670db3dc-3bf1-452a-b8fd-5bdf83bc23d2' style={{ marginRight: '1.5em' }} />
+                    <Image size='mini' src={icono} style={{ marginRight: '1.5em' }} />
                     Petinder
                     </Menu.Item>
                     <Menu.Item position='right'>
