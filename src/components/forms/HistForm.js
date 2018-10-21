@@ -1,6 +1,5 @@
 import React from 'react';
 import { Form, Button, FormField, Message, Header, Radio, FormRadio, Table,
-<<<<<<< HEAD
     Image, Grid, Container, Menu, Icon, Divider, Transition, Progress, Input } from 'semantic-ui-react';
     import { DateInput } from 'semantic-ui-calendar-react';
     import Validator from 'validator';
@@ -9,11 +8,6 @@ import { Form, Button, FormField, Message, Header, Radio, FormRadio, Table,
     import { Link } from 'react-router-dom';
     import firebase from 'firebase';
     import 'firebase/database';
-=======
-    Image, Grid, Container, Menu, Icon } from 'semantic-ui-react';
-import icono from './petinder.ico';
-import firebase from 'firebase';
->>>>>>> 3ff37fa438218ffed97366ef4a2aad3c4fbd1ecd
 
 class HistForm extends React.Component {
     constructor () {
@@ -121,7 +115,7 @@ class HistForm extends React.Component {
                 <Menu fixed='top' inverted color='yellow'>
                 <Container>
                     <Menu.Item as='a' header href = "/filter">
-                    <Image size='mini' src={icono} style={{ marginRight: '1.5em' }} />
+                    <Image size='mini' src='https://firebasestorage.googleapis.com/v0/b/petinder-fc7b6.appspot.com/o/petinder.ico?alt=media&token=670db3dc-3bf1-452a-b8fd-5bdf83bc23d2' style={{ marginRight: '1.5em' }} />
                     Petinder
                     </Menu.Item>
                     <Menu.Item position='right'>
