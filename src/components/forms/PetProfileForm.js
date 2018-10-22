@@ -201,13 +201,13 @@ class PetProfileForm extends React.Component {
         }
         console.log(record)
         console.log("UserId: " + this.state.userId);
-        if (this.state.userId == ""){
+        if (this.state.userId === ""){
             var dbRef = firebase.database().ref('userPets');
             var Data = dbRef.push();
             Data.set(record);
         }else{
-            var dbRef = firebase.database().ref('userPets/' + this.state.userId);
-            dbRef.set(record);
+            var dbRefU = firebase.database().ref('userPets/' + this.state.userId);
+            dbRefU.set(record);
         }
     
     }

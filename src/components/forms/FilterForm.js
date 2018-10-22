@@ -150,7 +150,7 @@ class FilterForm extends React.Component {
     }
 
     handleClick = () =>{
-        if (this.state.especie != "" || this.state.sexo!= ""){
+        if (this.state.especie !== "" || this.state.sexo!== ""){
             this.setState({ especie: "", sexo: "" });
             this.componentDidMount();
         }
