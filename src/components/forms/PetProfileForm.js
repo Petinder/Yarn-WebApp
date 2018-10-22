@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Button, FormField, Header, Grid, Input,
-    Image, Container, Menu, Radio, TextArea, Progress, Dimmer, Loader, Segment, Label, Icon } from 'semantic-ui-react';
+    Image, Container, Menu, Radio, TextArea, Progress, Dimmer, Loader, Segment, TransitionablePortal, Label, Icon } from 'semantic-ui-react';
 import { DateInput } from 'semantic-ui-calendar-react';
 import Validator from 'validator';
 import InlineError from '../messages/InlineError';
@@ -42,7 +42,8 @@ import icono from './petinder.ico';
     { key: '16', text: 'Oriental', value: 'Oriental' },
     { key: '17', text: 'Devon Rex', value: 'Devon Rex' },
     { key: '18', text: 'Seychellois', value: 'Seychellois' },
-    { key: '19', text: 'Tonkinés', value: 'Tonkinés' }
+    { key: '19', text: 'Tonkinés', value: 'Tonkinés' },
+    { key: '20', text: 'Cocker', value: 'Cocker' }
   ]
 
   const optionsPerro = [
@@ -77,6 +78,7 @@ class PetProfileForm extends React.Component {
         this.handleText = this.handleText.bind(this);
         this.handleUpload = this.handleUpload.bind(this);
         this.onChange = this.onChange.bind(this);
+        this.goHome = this.goHome.bind(this);
         this.state = {
             user: null,
             userMail: "",
@@ -94,7 +96,9 @@ class PetProfileForm extends React.Component {
             petPedigree: "",
             petDescription: "",
             userId: "",
-            isNew: true
+            isNew: true,
+            open: false,
+            wasPressed: false
         };
 
     }
@@ -111,7 +115,6 @@ class PetProfileForm extends React.Component {
     }
 
     componentDidMount(){
-        console.log("didmount")
         firebase.auth().onAuthStateChanged(user => {
             if (user) {              
                 this.setState({ user, userMail: user.email });
@@ -209,9 +212,16 @@ class PetProfileForm extends React.Component {
             var dbRefU = firebase.database().ref('userPets/' + this.state.userId);
             dbRefU.set(record);
         }
-    
+        //this.setState({wasPressed: true});
     }
- 
+    
+    goHome(){
+        if (this.state.wasPressed = true){
+            console.log('wasPressed');
+        }else{
+            console.log('wasNotPressed');
+        }
+    }
 
     onChange(event) {
         this.setState({[event.target.name]: ""});
@@ -265,15 +275,15 @@ class PetProfileForm extends React.Component {
                     Petinder
                     </Menu.Item>
                     <Menu.Item position='right'>
-                        <Menu.Item as='a' >
-                            <div class="syringe popup icon" data-tooltip="Historial de vacunas" data-position="bottom center" href = "/history" role="button">
+                        <Menu.Item as='a'>
+                            <a class="syringe popup icon" data-tooltip="Historial de vacunas" data-position="bottom center" href = "/history" role="button">
                             <i class="syringe icon"></i>
-                            </div>
+                            </a>
                         </Menu.Item>
                         <Menu.Item as='a'>
-                            <div class="userm popup icon" data-tooltip="Directorio de veterinarios" data-position="bottom left" href = "/Vet" role="button">
+                            <a class="userm popup icon" data-tooltip="Directorio de veterinarios" data-position="bottom left" href = "/Vet" role="button">
                             <i class="user md icon"></i>
-                            </div>
+                            </a>
                         </Menu.Item>
                         <Menu.Item as='a'>
                             <a class="signo popup icon button" data-tooltip="Cerrar sesión" data-position="bottom left" role="button" href = "/login" onClick={this.handleLogout}>
@@ -369,7 +379,7 @@ class PetProfileForm extends React.Component {
                     <Radio
                         label='Si'
                         name='petAsexed'
-                        value={this.state.petAsexed}
+                        value='1'
                         checked={this.state.petAsexed === '1'}
                         onChange={this.handleChange}
                     />
@@ -378,7 +388,7 @@ class PetProfileForm extends React.Component {
                     <Radio
                         label='No'
                         name='petAsexed'
-                        value={this.state.petAsexed}
+                        value='0'
                         checked={this.state.petAsexed === '0'}
                         onChange={this.handleChange}
                     />
@@ -454,11 +464,17 @@ class PetProfileForm extends React.Component {
                         value={this.state.ownerAddress}
                         onChange={this.onChange}/>
                     </FormField>
-                    <Form.Button
+                    <TransitionablePortal
+                    trigger={
+                        <Form.Button
                         content={this.state.isNew ? 'Registrar' : 'Actualizar'}
                         color = 'blue'
-                        onClick={this.handleText}
-                    />
+                        onClick={this.handleText}/>
+                        }>
+                        <Segment style={{ left: '40%', position: 'fixed', top: '40%', zIndex: 1000 }}>
+                        <Header>{this.state.isNew ? 'Perfil creado exitosamente!' : 'Perfil actualizado exitosamente!'}</Header>
+                        </Segment>
+                    </TransitionablePortal>
                     <br/>
                 </Grid.Column>
                 </Grid>
