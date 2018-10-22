@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Button, FormField, Header, Grid, Input,
-    Image, Container, Menu, Radio, TextArea, Progress, Dimmer, Loader, Segment } from 'semantic-ui-react';
+    Image, Container, Menu, Radio, TextArea, Progress, Dimmer, Loader, Segment, Label, Icon } from 'semantic-ui-react';
 import { DateInput } from 'semantic-ui-calendar-react';
 import Validator from 'validator';
 import InlineError from '../messages/InlineError';
@@ -292,8 +292,16 @@ class PetProfileForm extends React.Component {
                     <div position="centered">  
                         <Image width="250" src={this.state.photoURL} centered />
                         <br/>
+                        <div class="ui yellow progress">
                         <Progress value={this.state.uploadValue} total='100' progress />
-                        <Input type="file" onChange={this.handleUpload} class="inputfile" id="InputPhoto"/>
+                        </div>
+                        <p align="center">
+                        <Label color="yellow"  width="4" as="label" htmlFor="file" size="big">
+                            <Icon name="file image icon"/>
+                            Sube una imágen de tu mascota...
+                        </Label>
+                        <input id="file" hidden type="file" onChange={this.handleUpload} />
+                        </p>
                     </div>
                     
                 </Grid.Column>
