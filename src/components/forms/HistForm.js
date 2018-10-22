@@ -195,27 +195,24 @@ class HistForm extends React.Component {
         <Divider hidden />
             <Transition visible={visible} animation='scale' duration={500}>
                 
-            <Grid columns={3} divided>
-                <Grid.Column width={5.5}>
-                    <br></br>
+            <Grid columns={2} divided>
+                <Grid.Column>
                     <Header as='h3' align="center">Comprobante</Header>
-
                     <div position="centered">  
                         <Image width="250" src={this.state.photoURL} centered />
                         <br/>
                         <div class="ui yellow progress">
                         <Progress value={this.state.uploadValue} total='100' progress />
                         </div>
-                        <Label color="yellow"  width="4" as="label" htmlFor="file" size="big">
+                        <Label color="blue"  width="4" as="label" htmlFor="file" size="large">
                             <Icon name="file image icon"/>
-                            Sube una imagen del comprobante...
+                            Sube una imágen del comprobante...
                         </Label>
                         <input id="file" hidden type="file" onChange={this.handleUpload} />
                         </div>
                     
                 </Grid.Column>
-                <Grid.Column width={6}>
-                <br></br>
+                <Grid.Column >
                 <Header as='h3' align="center">Datos Vacuna</Header>                    
                     <FormField>
                         <label htmlFor="petName">Nombre</label>
@@ -238,8 +235,6 @@ class HistForm extends React.Component {
                         value={this.state.vaccineDate}
                         onChange={this.handleChange} 
                     />
-                </Grid.Column>
-                <Grid.Column width={4}>
                 <br></br>
                     <Header as='h3' align="center">Datos del Veterinario</Header>
                     <FormField>

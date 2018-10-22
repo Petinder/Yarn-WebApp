@@ -306,7 +306,7 @@ class PetProfileForm extends React.Component {
                         <Progress value={this.state.uploadValue} total='100' progress />
                         </div>
                         <p align="center">
-                        <Label color="yellow"  width="4" as="label" htmlFor="file" size="big">
+                        <Label color="blue"  width="4" as="label" htmlFor="file" size="large">
                             <Icon name="file image icon"/>
                             Sube una imágen de tu mascota...
                         </Label>
