@@ -1,10 +1,6 @@
 import React from 'react';
 import { Form, Button, FormField, Header, Grid, Input,
-<<<<<<< HEAD
-    Image, Container, Menu, Radio, TextArea, Progress, Dimmer, Loader, Segment, TransitionablePortal } from 'semantic-ui-react';
-=======
-    Image, Container, Menu, Radio, TextArea, Progress, Dimmer, Loader, Segment, Label, Icon } from 'semantic-ui-react';
->>>>>>> 7ca7e43a27d59fdd0555ffe79c3abde6eaf6eef2
+    Image, Container, Menu, Radio, TextArea, Progress, Dimmer, Loader, Segment, TransitionablePortal, Label, Icon } from 'semantic-ui-react';
 import { DateInput } from 'semantic-ui-calendar-react';
 import Validator from 'validator';
 import InlineError from '../messages/InlineError';
@@ -46,7 +42,8 @@ import icono from './petinder.ico';
     { key: '16', text: 'Oriental', value: 'Oriental' },
     { key: '17', text: 'Devon Rex', value: 'Devon Rex' },
     { key: '18', text: 'Seychellois', value: 'Seychellois' },
-    { key: '19', text: 'Tonkinés', value: 'Tonkinés' }
+    { key: '19', text: 'Tonkinés', value: 'Tonkinés' },
+    { key: '20', text: 'Cocker', value: 'Cocker' }
   ]
 
   const optionsPerro = [
@@ -476,10 +473,6 @@ class PetProfileForm extends React.Component {
                         }>
                         <Segment style={{ left: '40%', position: 'fixed', top: '40%', zIndex: 1000 }}>
                         <Header>{this.state.isNew ? 'Perfil creado exitosamente!' : 'Perfil actualizado exitosamente!'}</Header>
-                        <Form.Button
-                        content='Continuar'
-                        color = 'blue'
-                        onClick={this.goHome()}/>
                         </Segment>
                     </TransitionablePortal>
                     <br/>
