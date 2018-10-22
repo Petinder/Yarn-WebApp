@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Button, FormField, Message, Header, Radio, FormRadio, Table,
-    Image, Grid, Container, Menu, Icon, Divider, Transition, Progress, Input } from 'semantic-ui-react';
+    Image, Grid, Container, Menu, Icon, Divider, Transition, Progress, Input, Label} from 'semantic-ui-react';
     import { DateInput } from 'semantic-ui-calendar-react';
     import Validator from 'validator';
     import InlineError from '../messages/InlineError';
@@ -205,8 +205,12 @@ class HistForm extends React.Component {
                         <div class="ui yellow progress">
                         <Progress value={this.state.uploadValue} total='100' progress />
                         </div>
-                        <Input type="file" onChange={this.handleUpload} class="inputfile" id="InputPhoto"/>
-                    </div>
+                        <Label color="yellow"  width="4" as="label" htmlFor="file" size="big">
+                            <Icon name="file image icon"/>
+                            Sube una imagen del comprobante...
+                        </Label>
+                        <input id="file" hidden type="file" onChange={this.handleUpload} />
+                        </div>
                     
                 </Grid.Column>
                 <Grid.Column width={6}>
