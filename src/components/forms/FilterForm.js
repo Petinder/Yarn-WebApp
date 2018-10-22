@@ -1,5 +1,9 @@
 import React from 'react';
-import { Form, Radio, FormInput, Image, Grid, Container, Menu, Advertisement } from 'semantic-ui-react';
+import { Form, Radio, Rating, Image, Grid, Container, Menu, Advertisement, Header, Button, Popup,
+    Card,
+    Dropdown,
+    List,
+  Segment, } from 'semantic-ui-react';
 import firebase from 'firebase';
 import icono from './petinder.ico';
 
@@ -22,6 +26,7 @@ class FilterForm extends React.Component {
             especie: "",
             userId: "",
             rootRef: firebase.database().ref().child('userPets'),
+            rootRefAnun: firebase.database().ref().child('picturesA').limitToLast(2),
         };
     
         this.handleChangeR = this.handleChangeR.bind(this);
@@ -39,6 +44,15 @@ class FilterForm extends React.Component {
     }
 
     tarjetas(snapshot, card){
+        let buttonLike = "";
+        let buttonDisLike = "";
+        if(snapshot.child('petInfo/petSpecies').val() === "Perro"){
+            buttonLike = "Guau"
+            buttonDisLike = "Ggrr"
+        }else{
+            buttonLike = "Miau"
+            buttonDisLike = "Gghh"
+        }
         card.innerHTML += "<div class='ui card'>"+
                                 "<div class='content'>"+
                                 "<img src='" + snapshot.child('petInfo/petPhoto').val()+"'"+
@@ -46,12 +60,14 @@ class FilterForm extends React.Component {
                                 "<div class='header'>" + snapshot.child('petInfo/petName').val() + "</div>"+
                                 "<div class='meta'>" + snapshot.child('petInfo/petBreed').val()+"</div>"+
                                 "<div class='description'>"+
-                                    snapshot.child('petInfo/petDescription').val() +
+                                    snapshot.child('petInfo/petDescription').val() + 
+                                    "<br/> Nací en "+ snapshot.child('petInfo/petBirthDate').val() +
                                 "</div></div>"+
                                 "<div class='extra content'>"+
-                                "<div class='ui two buttons'>"+
-                                    "<button class='ui green basic button' role='button'>Approve</button>"+
-                                    "<button class='ui red basic button' role='button'>Decline</button>"+
+                                "<div class='ui buttons'>"+
+                                "<button class='ui green basic button' role='button'><i class='thumbs up outline icon left'></i>"+buttonLike+"</button>"+
+                                "<button class='ui red basic button' role='button'><i class='thumbs down outline icon left'></i>"+buttonDisLike+"</button>"+
+                                "<button class='ui black basic button' data-tooltip='Contáctame al número: "+snapshot.child('ownerInfo/phone').val()+"' data-position='bottom center' data-inverted=''><i class='add icon'></i></button>"+
                                 "</div></div></div>"
     }
 
@@ -161,34 +177,32 @@ class FilterForm extends React.Component {
         card.innerHTML = "";
 
         this.state.rootRef.on('child_added', snapshot => {
+            this.tarjetas(snapshot, card)
+        });
+
+        const anuncios = document.querySelector("#anuncios");
+        anuncios.innerHTML = "";
+
+        this.state.rootRefAnun.on('child_added', snapshot => {
             console.log("child key: " + snapshot.key);
-            card.innerHTML += "<div class='ui card'>"+
-                            "<div class='content'>"+
-                            "<img src='" + snapshot.child('petInfo/petPhoto').val()+"'"+
-                                "class='ui medium right floated image'/>"+
-                            "<div class='header'>" + snapshot.child('petInfo/petName').val() + "</div>"+
-                            "<div class='meta'>" + snapshot.child('petInfo/petBreed').val()+"</div>"+
-                            "<div class='description'>Soy un <strong>"+
-                                snapshot.child('petInfo/petSpecies').val() +"</strong> que nací el "+ snapshot.child('petInfo/petBirthDate').val()+
-                            "</div></div>"+
-                            "<div class='extra content'>"+
-                            "<div class='ui two buttons'>"+
-                                "<button class='ui green basic button' role='button'>Agregar</button>"+
-                                "<button class='ui red basic button' role='button'>Ignorar</button>"+
-                            "</div></div></div>"
+            anuncios.innerHTML += "<Advertisement unit='ui square'>"+
+                            "<img src='"+ snapshot.child('adInfo/adPhoto').val()+"' width='100%'/>"+
+                            "</Advertisement>"+
+                            "<br/>"
         }); 
     }
 
     render() {
         const {sexo, especie} = this.state
         return (
-            <Form>
+            <div>
                 <Menu fixed='top' inverted color='yellow'>
                 <Container>
-                    <Menu.Item as='a' header >
+                    <Menu.Item as='a' header>
                     <Image size='mini' src={icono} style={{ marginRight: '1.5em' }} />
                     Petinder
                     </Menu.Item>
+
                     <Menu.Item position='right'>
                         <Menu.Item as='a'>
                             <a class="paw popup icon button" data-tooltip="Editar perfil" data-position="bottom right" href = "/profile" role="button">
@@ -213,52 +227,44 @@ class FilterForm extends React.Component {
                     </Menu.Item>
                 </Container>
                 </Menu>
-                
-                <Grid>
-                <Grid.Column width={4}>
-                    <div class= "ui sticky fixed top">
-                    <br/><br/>
-                    <br/><br/>
-                    <br></br>
-                        <Form.Select
-                            fluid
-                            selection
-                            label='Especie'
-                            options={OpcionesEspecie}
-                            value={especie}
-                            placeholder='Especie'
-                            onChange={this.handleChangeR}
-                        />
-                        <br/><br/>
-                        <Form.Select
-                            fluid
-                            selection
-                            label='Sexo'
-                            options={OpcionesSexo}
-                            value={sexo}
-                            placeholder='Sexo'
-                            onChange={this.handleChangeS}
-                        />
-                        <br/><br/>
-                        <button class="negative ui button" onClick = {this.handleClick}>Eliminar filtro</button>
-                    </div>
-                </Grid.Column>
-                <Grid.Column width={9}>
-                    <br/><br/>
-                    <div class='ui cards' id ='cardPets'>
-                    </div>
-                </Grid.Column>
-                <Grid.Column width={3}>
-                    <br/><br/>
-                    <Advertisement unit='ui vertical rectangle'>
-                        <img src='https://i.pinimg.com/originals/14/dc/cc/14dcccda1ec006ac52fa17c642666e68.png' width="100%"/>
-                    </Advertisement>
-                    <Advertisement unit='ui vertical rectangle'>
-                        <img src='http://www.venfido.com.mx/im/banner_300x390.jpg' width="100%"/>
-                    </Advertisement>
-                </Grid.Column>
+
+                <Grid centered columns={3} style={{ marginTop: '3em' }}>
+                    <Grid.Column width={4} >
+                        <div style={{ marginTop: '6em' }} class= "ui sticky fixed top">
+                            <Form.Select
+                                fluid
+                                selection
+                                label='Especie'
+                                options={OpcionesEspecie}
+                                value={especie}
+                                placeholder='Especie'
+                                onChange={this.handleChangeR}
+                            />
+                            <br/><br/>
+                            <Form.Select
+                                fluid
+                                selection
+                                label='Sexo'
+                                options={OpcionesSexo}
+                                value={sexo}
+                                placeholder='Sexo'
+                                onChange={this.handleChangeS}
+                            />
+                            <br/><br/>
+                            <button class="negative ui button" onClick = {this.handleClick}>Eliminar filtro</button>
+
+                        </div>
+                    </Grid.Column>
+                    <Grid.Column width={9} >
+                        <div class='ui cards' id ='cardPets'>
+                        </div>
+                    </Grid.Column>
+                    <Grid.Column width={3} >
+                        <div style={{ marginTop: '6em' }} class= "ui sticky fixed top" id ='anuncios'> 
+                        </div>
+                    </Grid.Column>
                 </Grid>
-            </Form>
+            </div>
         );
     }
 }
