@@ -230,7 +230,7 @@ class FilterForm extends React.Component {
 
                 <Grid centered columns={3} style={{ marginTop: '3em' }}>
                     <Grid.Column width={4} >
-                        <div style={{ marginTop: '6em' }} class= "ui sticky fixed top">
+                        <div style={{ marginTop: '7em' }} class= "ui sticky fixed top">
                             <Form.Select
                                 fluid
                                 selection
@@ -260,7 +260,7 @@ class FilterForm extends React.Component {
                         </div>
                     </Grid.Column>
                     <Grid.Column width={3} >
-                        <div style={{ marginTop: '6em' }} class= "ui sticky fixed top" id ='anuncios'> 
+                        <div style={{ marginTop: '7em' }} class= "ui sticky fixed top" id ='anuncios'> 
                         </div>
                     </Grid.Column>
                 </Grid>
