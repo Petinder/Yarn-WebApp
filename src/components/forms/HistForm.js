@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Button, FormField, Message, Header, Radio, FormRadio, Table,
-    Image, Grid, Container, Menu, Icon, Divider, Transition, Progress, Input } from 'semantic-ui-react';
+    Image, Grid, Container, Menu, Icon, Divider, Transition, Progress, Input, Label} from 'semantic-ui-react';
     import { DateInput } from 'semantic-ui-calendar-react';
     import Validator from 'validator';
     import InlineError from '../messages/InlineError';
@@ -8,6 +8,7 @@ import { Form, Button, FormField, Message, Header, Radio, FormRadio, Table,
     import { Link } from 'react-router-dom';
     import firebase from 'firebase';
     import 'firebase/database';
+    import icono from './petinder.ico';
 
 class HistForm extends React.Component {
     constructor () {
@@ -115,7 +116,7 @@ class HistForm extends React.Component {
                 <Menu fixed='top' inverted color='yellow'>
                 <Container>
                     <Menu.Item as='a' header href = "/filter">
-                    <Image size='mini' src='https://firebasestorage.googleapis.com/v0/b/petinder-fc7b6.appspot.com/o/petinder.ico?alt=media&token=670db3dc-3bf1-452a-b8fd-5bdf83bc23d2' style={{ marginRight: '1.5em' }} />
+                    <Image size='mini' src={icono} style={{ marginRight: '1.5em' }} />
                     Petinder
                     </Menu.Item>
                     <Menu.Item position='right'>
@@ -205,8 +206,12 @@ class HistForm extends React.Component {
                         <div class="ui yellow progress">
                         <Progress value={this.state.uploadValue} total='100' progress />
                         </div>
-                        <Input type="file" onChange={this.handleUpload} class="inputfile" id="InputPhoto"/>
-                    </div>
+                        <Label color="yellow"  width="4" as="label" htmlFor="file" size="big">
+                            <Icon name="file image icon"/>
+                            Sube una imagen del comprobante...
+                        </Label>
+                        <input id="file" hidden type="file" onChange={this.handleUpload} />
+                        </div>
                     
                 </Grid.Column>
                 <Grid.Column width={6}>

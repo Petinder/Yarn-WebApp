@@ -1,6 +1,10 @@
 import React from 'react';
 import { Form, Button, FormField, Header, Grid, Input,
+<<<<<<< HEAD
     Image, Container, Menu, Radio, TextArea, Progress, Dimmer, Loader, Segment, TransitionablePortal } from 'semantic-ui-react';
+=======
+    Image, Container, Menu, Radio, TextArea, Progress, Dimmer, Loader, Segment, Label, Icon } from 'semantic-ui-react';
+>>>>>>> 7ca7e43a27d59fdd0555ffe79c3abde6eaf6eef2
 import { DateInput } from 'semantic-ui-calendar-react';
 import Validator from 'validator';
 import InlineError from '../messages/InlineError';
@@ -203,13 +207,13 @@ class PetProfileForm extends React.Component {
         }
         console.log(record)
         console.log("UserId: " + this.state.userId);
-        if (this.state.userId == ""){
+        if (this.state.userId === ""){
             var dbRef = firebase.database().ref('userPets');
             var Data = dbRef.push();
             Data.set(record);
         }else{
-            var dbRef = firebase.database().ref('userPets/' + this.state.userId);
-            dbRef.set(record);
+            var dbRefU = firebase.database().ref('userPets/' + this.state.userId);
+            dbRefU.set(record);
         }
         //this.setState({wasPressed: true});
     }
@@ -301,8 +305,16 @@ class PetProfileForm extends React.Component {
                     <div position="centered">  
                         <Image width="250" src={this.state.photoURL} centered />
                         <br/>
+                        <div class="ui yellow progress">
                         <Progress value={this.state.uploadValue} total='100' progress />
-                        <Input type="file" onChange={this.handleUpload} class="inputfile" id="InputPhoto"/>
+                        </div>
+                        <p align="center">
+                        <Label color="yellow"  width="4" as="label" htmlFor="file" size="big">
+                            <Icon name="file image icon"/>
+                            Sube una imágen de tu mascota...
+                        </Label>
+                        <input id="file" hidden type="file" onChange={this.handleUpload} />
+                        </p>
                     </div>
                     
                 </Grid.Column>
