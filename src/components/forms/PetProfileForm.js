@@ -473,6 +473,7 @@ class PetProfileForm extends React.Component {
                         }>
                         <Segment style={{ left: '40%', position: 'fixed', top: '40%', zIndex: 1000 }}>
                         <Header>{this.state.isNew ? 'Perfil creado exitosamente!' : 'Perfil actualizado exitosamente!'}</Header>
+                        <Header as='h5'>{this.state.isNew ? 'No olvides actualizar el historial de vacunas de tu mascota' : ''}</Header>
                         </Segment>
                     </TransitionablePortal>
                     <br/>
