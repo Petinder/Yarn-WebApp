@@ -209,10 +209,11 @@ class PetProfileForm extends React.Component {
             var Data = dbRef.push();
             Data.set(record);
         }else{
-            var dbRefU = firebase.database().ref('userPets/' + this.state.userId);
-            dbRefU.set(record);
+            var dbRefU = firebase.database().ref('userPets/' + this.state.userId + '/ownerInfo');
+            dbRefU.update(record.ownerInfo);
+            dbRefU = firebase.database().ref('userPets/' + this.state.userId + '/petInfo');
+            dbRefU.update(record.petInfo);
         }
-        //this.setState({wasPressed: true});
     }
     
     goHome(){
@@ -473,6 +474,7 @@ class PetProfileForm extends React.Component {
                         }>
                         <Segment style={{ left: '40%', position: 'fixed', top: '40%', zIndex: 1000 }}>
                         <Header>{this.state.isNew ? 'Perfil creado exitosamente!' : 'Perfil actualizado exitosamente!'}</Header>
+                        <Header as='h5'>{this.state.isNew ? 'No olvides actualizar el historial de vacunas de tu mascota' : ''}</Header>
                         </Segment>
                     </TransitionablePortal>
                     <br/>
