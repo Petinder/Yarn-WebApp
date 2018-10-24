@@ -465,6 +465,7 @@ class PetProfileForm extends React.Component {
                         value={this.state.ownerAddress}
                         onChange={this.onChange}/>
                     </FormField>
+                    <p align="center">
                     <TransitionablePortal
                     trigger={
                         <Form.Button
@@ -477,6 +478,7 @@ class PetProfileForm extends React.Component {
                         <Header as='h5'>{this.state.isNew ? 'No olvides actualizar el historial de vacunas de tu mascota' : ''}</Header>
                         </Segment>
                     </TransitionablePortal>
+                    </p>
                     <br/>
                 </Grid.Column>
                 </Grid>

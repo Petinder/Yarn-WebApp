@@ -185,7 +185,7 @@ class HistForm extends React.Component {
             <Table.Footer fullWidth>
                 <Table.Row>
                     <Table.HeaderCell colSpan='4'>
-                        <Button content={visible ? 'Hide' : 'Show'} onClick={this.toggleVisibility} floated='right' icon labelPosition='left' color='yellow' size='small'>
+                        <Button content={visible ? 'Hide' : 'Show'} onClick={this.toggleVisibility} floated='right' icon labelPosition='left' color='blue' size='small'>
                             <Icon name='syringe' /> Agregar Vacuna
                         </Button>
                     </Table.HeaderCell>
@@ -204,10 +204,12 @@ class HistForm extends React.Component {
                         <div class="ui yellow progress">
                         <Progress value={this.state.uploadValue} total='100' progress />
                         </div>
+                        <p align="center">
                         <Label color="blue"  width="4" as="label" htmlFor="file" size="large">
                             <Icon name="file image icon"/>
                             Sube una imágen del comprobante...
                         </Label>
+                        </p>
                         <input id="file" hidden type="file" onChange={this.handleUpload} />
                         </div>
                     
@@ -247,7 +249,9 @@ class HistForm extends React.Component {
                         value={vetName}
                         onChange={this.onChange}/>
                     </FormField>
+                    <p align="center">
                     <Button onClick={this.handleText} primary>Registrar</Button>
+                    </p>
                     <br/>
                 </Grid.Column>
                 </Grid>
