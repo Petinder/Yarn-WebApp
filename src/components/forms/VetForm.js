@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Button, FormField, Message, Header, Radio, FormRadio, Table,
-    Image, Grid, Container, Menu, Icon, Card } from 'semantic-ui-react';
+    Image, Grid, Container, Menu, Icon, Modal } from 'semantic-ui-react';
 import firebase from 'firebase';
 import icono from './petinder.ico';
 
@@ -42,23 +42,27 @@ class VetForm extends React.Component {
         card.innerHTML = "";
 
         this.state.rootRef.on('child_added', snapshot => {
-            card.innerHTML += "<div class='ui card'>"+
-                                "<div class='ui yellow fluid card'>"+
-                                  "<div class='content'>"+
-                                    "<img src='https://react.semantic-ui.com/images/avatar/large/steve.jpg' class='ui mini right floated image' />"+
-                                    "<div class='header'>"+snapshot.child('vetInfo/name').val()+"</div>"+
-                                    "<div class='meta'>"+snapshot.child('services/clinicName').val()+"</div>"+
-                                    "<div class='description'>"+snapshot.child('services/vetDescription').val()+
+            card.innerHTML += "<div class='ui orange fluid card'><div class='ui divided items'>"+
+                                "<div class='item'>"+
+                                    "<div class='image'>"+
+                                    "<img src='"+snapshot.child('vetInfo/photo').val()+"' />"+
+                                    "</div>"+
+                                    "<div class='content'><br/>"+
+                                    "<a class='header'>"+snapshot.child('services/clinicName').val()+"<br/>"+snapshot.child('vetInfo/name').val()+"</a>"+
+                                    "<div class='meta'>"+
+                                        "<span class='cinema'>Visítanos en "+snapshot.child('vetInfo/address').val()+"<br/>Contáctanos "+snapshot.child('services/clinicPhone').val()+" - "+snapshot.child('vetInfo/phone').val()+"</span>"+
+                                    "</div>"+
+                                    "<div class='description'>"+
+                                    snapshot.child('services/vetDescription').val()+" Ofrecemos: "+snapshot.child('services/clinicAditionalServices').val()+
+                                    "</div>"+
+                                    "<div class='extra'>"+
+                                        "<div class='ui green label' >"+snapshot.child('services/animalThatServes').val()+"</div>"+
+                                        "<div class='ui blue label' >"+snapshot.child('experience/AditionalExpertise').val()+"</div>"+
                                     "</div>"+
                                     "</div>"+
-                                    "<div class='extra content'>"+
-                                    "<div class='ui two buttons'>"+
-                                    "<button class='ui green basic button' role='button'>Horarios</button>"+
-                                    "<button class='ui orange basic button' role='button'>Mas información</button>"+
-                                    "</div>"+
-                                  "</div>"+
                                 "</div>"+
-                               "</div>"
+                                "</div></div>"
+
         });
     }
 
