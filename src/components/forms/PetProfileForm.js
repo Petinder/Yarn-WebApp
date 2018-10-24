@@ -209,10 +209,11 @@ class PetProfileForm extends React.Component {
             var Data = dbRef.push();
             Data.set(record);
         }else{
-            var dbRefU = firebase.database().ref('userPets/' + this.state.userId);
-            dbRefU.set(record);
+            var dbRefU = firebase.database().ref('userPets/' + this.state.userId + '/ownerInfo');
+            dbRefU.update(record.ownerInfo);
+            dbRefU = firebase.database().ref('userPets/' + this.state.userId + '/petInfo');
+            dbRefU.update(record.petInfo);
         }
-        //this.setState({wasPressed: true});
     }
     
     goHome(){
