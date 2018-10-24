@@ -1,9 +1,5 @@
 import React from 'react';
-import { Form, Radio, Rating, Image, Grid, Container, Menu, Advertisement, Header, Button, Popup,
-    Card,
-    Dropdown,
-    List,
-  Segment, } from 'semantic-ui-react';
+import { Form, Radio, Rating, Image, Grid, Container, Menu, } from 'semantic-ui-react';
 import firebase from 'firebase';
 import icono from './petinder.ico';
 

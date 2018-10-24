@@ -1,6 +1,7 @@
 import React from 'react';
-import { Form, Button, FormField, Header, Grid, Input,
-    Image, Container, Menu, Radio, TextArea, Progress, Dimmer, Loader, Segment, TransitionablePortal, Label, Icon } from 'semantic-ui-react';
+import { Form, Button, FormField, Header, Grid,
+    Image, Container, Menu, Radio, TextArea, Progress, Segment, Message, Label, Icon,
+    Modal} from 'semantic-ui-react';
 import { DateInput } from 'semantic-ui-calendar-react';
 import Validator from 'validator';
 import InlineError from '../messages/InlineError';
@@ -465,19 +466,29 @@ class PetProfileForm extends React.Component {
                         value={this.state.ownerAddress}
                         onChange={this.onChange}/>
                     </FormField>
-                    <p align="center">
-                    <TransitionablePortal
-                    trigger={
-                        <Form.Button
+                    <p align="center">                    
+                    <Modal trigger={<Form.Button
                         content={this.state.isNew ? 'Registrar' : 'Actualizar'}
                         color = 'blue'
-                        onClick={this.handleText}/>
-                        }>
-                        <Segment style={{ left: '40%', position: 'fixed', top: '40%', zIndex: 1000 }}>
-                        <Header>{this.state.isNew ? 'Perfil creado exitosamente!' : 'Perfil actualizado exitosamente!'}</Header>
-                        <Header as='h5'>{this.state.isNew ? 'No olvides actualizar el historial de vacunas de tu mascota' : ''}</Header>
-                        </Segment>
-                    </TransitionablePortal>
+                        onClick={this.handleText}/>} 
+                        basic size='small'>
+
+                        <Header as='h1'>{this.state.isNew ? '¡Perfil creado exitosamente!' : '¡Perfil actualizado exitosamente!'}</Header>
+                        <Modal.Content>
+                        <h3>
+                            No olvides actualizar el <a href = "/history">historial de vacunas</a> de tu mascota, ya que esto te permitirá posisionar a tu
+                            mascota entre las mejores.
+                        </h3>
+                        </Modal.Content>
+                        <Modal.Actions>
+                        <Button color='orange' inverted  href = "/filter">
+                            <Icon name='home' /> Ir a la página principal
+                        </Button>
+                        <Button color='blue' inverted href = "/history">
+                            <Icon name='syringe icon' /> Actualizar historial de vacunas
+                        </Button>
+                        </Modal.Actions>
+                    </Modal>
                     </p>
                     <br/>
                 </Grid.Column>

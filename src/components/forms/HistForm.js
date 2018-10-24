@@ -30,15 +30,20 @@ class HistForm extends React.Component {
     toggleVisibility = () => this.setState({ visible: !this.state.visible })
 
     componentWillMount(){
+        const card = document.querySelector("#TableBody");
+
         firebase.auth().onAuthStateChanged(user => {
             if (user) {             
                 var key = "";
+                var vacunas = "";
                 firebase.database().ref('userPets').orderByChild('ownerInfo/mail').equalTo(user.email).once("value").then((snapshot) => {
                     if (snapshot.exists()){
                         console.log(snapshot.val());
                         snapshot.forEach((childSnapshot) => {
                             key = childSnapshot.key;
+                            vacunas = childSnapshot.child('petInfo/petVaccinations/catVaccinations').val();
                             this.getUserId(key);
+                            console.log(vacunas);                          
                         });
                         }
                     })
@@ -104,7 +109,6 @@ class HistForm extends React.Component {
         return errors;
     };
 
-
     render() {
 
         const { visible } = this.state
@@ -153,7 +157,7 @@ class HistForm extends React.Component {
                     </Table.Row>
                     </Table.Header>
 
-                    <Table.Body>
+                    <Table.Body id='TableBody'>
                     <Table.Row>
                         <Table.Cell collapsing singleLine>
                         <Icon name='file outline' /> rabia_200.png
