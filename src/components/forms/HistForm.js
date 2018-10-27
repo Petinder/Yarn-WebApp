@@ -19,6 +19,7 @@ class HistForm extends React.Component {
             vetName: "",
             vaccineDate: "",
             photoURL: 'https://react.semantic-ui.com/images/wireframe/image.png',
+            photoName: "",
             uploadValue: 0,
             visible: false
         };
@@ -30,20 +31,15 @@ class HistForm extends React.Component {
     toggleVisibility = () => this.setState({ visible: !this.state.visible })
 
     componentWillMount(){
-        const card = document.querySelector("#TableBody");
-
         firebase.auth().onAuthStateChanged(user => {
             if (user) {             
                 var key = "";
-                var vacunas = "";
                 firebase.database().ref('userPets').orderByChild('ownerInfo/mail').equalTo(user.email).once("value").then((snapshot) => {
                     if (snapshot.exists()){
                         console.log(snapshot.val());
                         snapshot.forEach((childSnapshot) => {
                             key = childSnapshot.key;
-                            vacunas = childSnapshot.child('petInfo/petVaccinations/catVaccinations').val();
-                            this.getUserId(key);
-                            console.log(vacunas);                          
+                            this.getUserId(key);       
                         });
                         }
                     })
@@ -56,6 +52,7 @@ class HistForm extends React.Component {
     getUserId(key){
         this.setState({userId: key});
         console.log("User logged: " + key);
+        this.llenarTabla();
     }
 
     handleUpload(event) {
@@ -72,19 +69,39 @@ class HistForm extends React.Component {
             console.log('Error ', error.message);
           }, () => {
             task.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                this.setState({photoURL: downloadURL, uploadValue: 100})
+                this.setState({photoURL: downloadURL, photoName: file.name, uploadValue: 100})
             });
           });
     }
-      
+    
+    llenarTabla(){
+        const card = document.querySelector("#TableBody");
+        var vacunas = "";
+        card.innerHTML = "";
+
+        firebase.database().ref('userPets').orderByKey().equalTo(this.state.userId).once("value").then((snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                vacunas = childSnapshot.child('petInfo/petVaccinations').val();
+                
+                Object.keys(vacunas).forEach(function(key) {
+                    card.innerHTML += "<tr class=''>"+
+                                            "<td class='single line'><i aria-hidden='true' class='file outline icon' /> "+vacunas[key]['PhotoName']+"</td>"+
+                                            "<td class=''>"+vacunas[key]['Name']+"</td>"+
+                                            "<td class=''>"+vacunas[key]['Vet']+"</td>"+
+                                            "<td class='right aligned'>"+vacunas[key]['Date']+"</td>"+
+                                        "</tr>"
+                });        
+            });
+        });
+    }
+
     handleText(){
         const record = {
-            vaccine:{
                 Photo: this.state.photoURL,
+                PhotoName: this.state.photoName,
                 Name: this.state.data.vaccineName,
                 Vet: this.state.data.vetName,
                 Date: this.state.vaccineDate
-            }
         }
         console.log(record)
         const dbRef = firebase.database().ref('userPets/' + this.state.userId +'/petInfo/petVaccinations');
@@ -158,32 +175,6 @@ class HistForm extends React.Component {
                     </Table.Header>
 
                     <Table.Body id='TableBody'>
-                    <Table.Row>
-                        <Table.Cell collapsing singleLine>
-                        <Icon name='file outline' /> rabia_200.png
-                        </Table.Cell>
-                        <Table.Cell>Rabia</Table.Cell>
-                        <Table.Cell>Javier Argueta</Table.Cell>
-                        <Table.Cell collapsing textAlign='right'>
-                        20/03/200
-                        </Table.Cell>
-                    </Table.Row>
-                    <Table.Row>
-                        <Table.Cell singleLine>
-                        <Icon name='file outline' /> parvovirus_2017.png
-                        </Table.Cell>
-                        <Table.Cell>Parvovirus</Table.Cell>
-                        <Table.Cell>Carrillo Palvet</Table.Cell>
-                        <Table.Cell textAlign='right'>15/10/2017</Table.Cell>
-                    </Table.Row>
-                    <Table.Row>
-                        <Table.Cell singleLine>
-                        <Icon name='file outline' /> polivalente_2018.png
-                        </Table.Cell>
-                        <Table.Cell>Polivalente</Table.Cell>
-                        <Table.Cell>Lopez Dogtors</Table.Cell>
-                        <Table.Cell textAlign='right'>12/12/2018</Table.Cell>
-                    </Table.Row>
                     </Table.Body>
 
             <Table.Footer fullWidth>

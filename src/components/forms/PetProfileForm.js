@@ -44,7 +44,8 @@ import icono from './petinder.ico';
     { key: '17', text: 'Devon Rex', value: 'Devon Rex' },
     { key: '18', text: 'Seychellois', value: 'Seychellois' },
     { key: '19', text: 'Tonkinés', value: 'Tonkinés' },
-    { key: '20', text: 'Cocker', value: 'Cocker' }
+    { key: '20', text: 'Cocker', value: 'Cocker' },
+    { key: '21', text: 'Munchkin', value: 'Munchkin' } 
   ]
 
   const optionsPerro = [
@@ -67,7 +68,10 @@ import icono from './petinder.ico';
     { key: '16', text: 'Gran Danés', value: 'Gran Danés' },
     { key: '17', text: 'Cocker Inglés', value: 'Cocker Inglés' },
     { key: '18', text: 'Schnauzer', value: 'Schnauzer' },
-    { key: '19', text: 'Chihuahua', value: 'Chihuahua' }
+    { key: '19', text: 'Chihuahua', value: 'Chihuahua' },
+    { key: '20', text: 'Pug', value: 'Pug' },
+    { key: '21', text: 'Terrier', value: 'Terrier' },
+    { key: '22', text: 'Bulldog', value: 'Bulldog' }
   ]
 
 class PetProfileForm extends React.Component {
