@@ -39,7 +39,12 @@ class FilterForm extends React.Component {
         this.componentRand(value, 'sexo');
     }
 
-    tarjetas(snapshot, card){
+    onChange  = (e, { value }) => {
+        console.log("nombre del boton "+ value);
+    }
+
+    tarjetas = (snapshot, card) =>{
+        console.log("Key pet "+snapshot.key);
         let buttonLike = "";
         let buttonDisLike = "";
         if(snapshot.child('petInfo/petSpecies').val() === "Perro"){
@@ -61,9 +66,9 @@ class FilterForm extends React.Component {
                                 "</div></div>"+
                                 "<div class='extra content'>"+
                                 "<div class='ui buttons'>"+
-                                "<button class='ui green basic button' role='button'><i class='thumbs up outline icon left'></i>"+buttonLike+"</button>"+
+                                "<button class='ui green basic button' role='button' name='petName' value='145' onClick={console.log("+snapshot.key.toString()+")}><i class='thumbs up outline icon left'></i>"+buttonLike+"</button>"+
                                 "<button class='ui red basic button' role='button'><i class='thumbs down outline icon left'></i>"+buttonDisLike+"</button>"+
-                                "<button class='ui black basic button' data-tooltip='Contáctame al número: "+snapshot.child('ownerInfo/phone').val()+"' data-position='bottom center' data-inverted=''><i class='add icon'></i></button>"+
+                                "<button class='ui black basic button' data-tooltip='Contáctame al número: "+snapshot.child('ownerInfo/phone').val()+"' data-position='top center' data-inverted=''><i class='add icon'></i></button>"+
                                 "</div></div></div>"
     }
 
