@@ -66,7 +66,7 @@ class DesktopContainer extends React.Component {
 componentWillMount(){
     firebase.auth().onAuthStateChanged(user => {
         if(user) {
-            this.props.history.push("/filter");
+          window.location.pathname = "/filter";
         }
       });
 }
@@ -154,7 +154,7 @@ class MobileContainer extends React.Component {
 componentWillMount(){
     firebase.auth().onAuthStateChanged(user => {
         if(user) {
-            this.props.history.push("/filter");
+          window.location.pathname = "/filter";
         }
       });
 }
