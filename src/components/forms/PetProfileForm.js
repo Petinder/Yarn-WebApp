@@ -4,7 +4,7 @@ import { Form, Button, FormField, Header, Grid, Visibility, Responsive,
     Modal} from 'semantic-ui-react';
 import { DateInput } from 'semantic-ui-calendar-react';
 import Validator from 'validator';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import firebase from 'firebase';
 import 'firebase/database';
 import icono from './petinder.ico';
@@ -72,7 +72,7 @@ import icono from './petinder.ico';
     { key: '22', text: 'Bulldog', value: 'Bulldog' }
   ]
 
-  const HomepageHeading = ({ mobile }) => (
+const HomepageHeading = ({ mobile }) => (
     <Container text>
         
     </Container>
@@ -766,9 +766,12 @@ class MobileContainer extends React.Component {
                 </Container>
                 </Menu>
             </Form>
+            <Container>
+                    <br></br>
+                    <br></br>
+                    <br></br>
                     <br></br>
                     <Header as='h3'>Datos mascota</Header>
-
                     <div position="centered">  
                         <Image width="250" src={this.state.photoURL} centered />
                         <br/>
@@ -949,6 +952,7 @@ class MobileContainer extends React.Component {
                         </Modal.Actions>
                     </Modal>
                     </p>
+                    </Container>
                     <br/>
             </Visibility>
 
