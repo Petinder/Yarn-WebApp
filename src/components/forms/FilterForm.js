@@ -1,7 +1,8 @@
 import React from 'react';
-import { Form, Radio, Rating, Image, Grid, Container, Menu, } from 'semantic-ui-react';
+import { Form, Button, Rating, Image, Grid, Container, Menu, Card} from 'semantic-ui-react';
 import firebase from 'firebase';
 import icono from './petinder.ico';
+import PetCard from './PetCard';
 
 const OpcionesEspecie = [
     { key: 'c', text: 'Gato', value: 'Gato' },
@@ -23,6 +24,7 @@ class FilterForm extends React.Component {
             userId: "",
             rootRef: firebase.database().ref().child('userPets'),
             rootRefAnun: firebase.database().ref().child('picturesA').limitToLast(2),
+            pet: [],
         };
     
         this.handleChangeR = this.handleChangeR.bind(this);
@@ -31,45 +33,26 @@ class FilterForm extends React.Component {
       }
 
     handleChangeR = (e, { value }) => {
-        this.setState({ especie: value })
+        this.setState({ especie: value });
+        this.state.pet.length=0
         this.componentRand(value, 'especie');
     }
     handleChangeS = (e, { value }) => {
-        this.setState({ sexo: value })
+        this.setState({ sexo: value });
+        this.state.pet.length=0
         this.componentRand(value, 'sexo');
     }
 
-    onChange  = (e, { value }) => {
-        console.log("nombre del boton "+ value);
-    }
-
-    tarjetas = (snapshot, card) =>{
-        console.log("Key pet "+snapshot.key);
-        let buttonLike = "";
-        let buttonDisLike = "";
-        if(snapshot.child('petInfo/petSpecies').val() === "Perro"){
-            buttonLike = "Guau"
-            buttonDisLike = "Ggrr"
-        }else{
-            buttonLike = "Miau"
-            buttonDisLike = "Gghh"
-        }
-        card.innerHTML += "<div class='ui card'>"+
-                                "<div class='content'>"+
-                                "<img src='" + snapshot.child('petInfo/petPhoto').val()+"'"+
-                                    "class='ui medium right floated image'/>"+
-                                "<div class='header'>" + snapshot.child('petInfo/petName').val() + "</div>"+
-                                "<div class='meta'>" + snapshot.child('petInfo/petBreed').val()+"</div>"+
-                                "<div class='description'>"+
-                                    snapshot.child('petInfo/petDescription').val() + 
-                                    "<br/> Nací en "+ snapshot.child('petInfo/petBirthDate').val() +
-                                "</div></div>"+
-                                "<div class='extra content'>"+
-                                "<div class='ui buttons'>"+
-                                "<button class='ui green basic button' role='button' name='petName' value='145' onClick={console.log("+snapshot.key.toString()+")}><i class='thumbs up outline icon left'></i>"+buttonLike+"</button>"+
-                                "<button class='ui red basic button' role='button'><i class='thumbs down outline icon left'></i>"+buttonDisLike+"</button>"+
-                                "<button class='ui black basic button' data-tooltip='Contáctame al número: "+snapshot.child('ownerInfo/phone').val()+"' data-position='top center' data-inverted=''><i class='add icon'></i></button>"+
-                                "</div></div></div>"
+    tarjetasPet = (snapshot) =>{
+        //console.log(snapshot);
+        this.state.pet.push({key: snapshot.key,
+                                petPhoto: snapshot.child('petInfo/petPhoto').val(),
+                                petName: snapshot.child('petInfo/petName').val(),  
+                                petBreed: snapshot.child('petInfo/petBreed').val(), 
+                                petDescription: snapshot.child('petInfo/petDescription').val(),
+                                petBirthDate: snapshot.child('petInfo/petBirthDate').val(),
+                                petSpecies: snapshot.child('petInfo/petSpecies').val(),
+                                phone: snapshot.child('ownerInfo/phone').val()}, )
     }
 
     handleLogout () {
@@ -88,7 +71,7 @@ class FilterForm extends React.Component {
                 var key = "";
                 firebase.database().ref('userPets').orderByChild('ownerInfo/mail').equalTo(user.email).once("value").then((snapshot) => {
                     if (snapshot.exists()){
-                        console.log(snapshot.val());
+                        //console.log(snapshot.val());
                         snapshot.forEach((childSnapshot) => {
                             key = childSnapshot.key;
                             this.getUserId(key);
@@ -108,19 +91,17 @@ class FilterForm extends React.Component {
 
     componentRand(value, filtro) {
         //const rootRef = firebase.database().ref().child('userPets');
-        const card = document.querySelector("#cardPets");
-        card.innerHTML = "";
 
         if(filtro === 'sexo'){
             if(this.state.especie === ""){
                 this.state.rootRef.on('child_added', snapshot => {
                     if(value === 'M'){
                         if(snapshot.child('petInfo/petSex').val() === 'M'){
-                            this.tarjetas(snapshot, card)
+                            this.tarjetasPet(snapshot)
                         }
                     }else{
                         if(snapshot.child('petInfo/petSex').val() === 'F'){
-                            this.tarjetas(snapshot, card)
+                            this.tarjetasPet(snapshot)
                         } 
                     }
                 });
@@ -128,11 +109,11 @@ class FilterForm extends React.Component {
                 this.state.rootRef.orderByChild("petInfo/petSpecies").equalTo(this.state.especie).on('child_added', snapshot => {
                     if(value === 'M'){
                         if(snapshot.child('petInfo/petSex').val() === 'M'){
-                            this.tarjetas(snapshot, card)
+                            this.tarjetasPet(snapshot)
                         }
                     }else{
                         if(snapshot.child('petInfo/petSex').val() === 'F'){
-                            this.tarjetas(snapshot, card)
+                            this.tarjetasPet(snapshot)
                         } 
                     }
                 });
@@ -142,11 +123,11 @@ class FilterForm extends React.Component {
                 this.state.rootRef.on('child_added', snapshot => {
                     if(value === 'Gato'){
                         if(snapshot.child('petInfo/petSpecies').val() === 'Gato'){
-                            this.tarjetas(snapshot, card)
+                            this.tarjetasPet(snapshot)
                         }
                     }else{
                         if(snapshot.child('petInfo/petSpecies').val() === 'Perro'){
-                            this.tarjetas(snapshot, card)
+                            this.tarjetasPet(snapshot)
                         }
                     }
                 });
@@ -154,11 +135,11 @@ class FilterForm extends React.Component {
                 this.state.rootRef.orderByChild("petInfo/petSex").equalTo(this.state.sexo).on('child_added', snapshot => {
                     if(value === 'Gato'){
                         if(snapshot.child('petInfo/petSpecies').val() === 'Gato'){
-                            this.tarjetas(snapshot, card)
+                            this.tarjetasPet(snapshot)
                         }
                     }else{
                         if(snapshot.child('petInfo/petSex').val() === 'Perro'){
-                            this.tarjetas(snapshot, card)
+                            this.tarjetasPet(snapshot)
                         } 
                     }
                 });
@@ -174,11 +155,10 @@ class FilterForm extends React.Component {
     }
 
     componentDidMount() {
-        const card = document.querySelector("#cardPets");
-        card.innerHTML = "";
+        this.state.pet.length=0
 
         this.state.rootRef.on('child_added', snapshot => {
-            this.tarjetas(snapshot, card)
+            this.tarjetasPet(snapshot)
         });
 
         const anuncios = document.querySelector("#anuncios");
@@ -190,10 +170,16 @@ class FilterForm extends React.Component {
                             "<img src='"+ snapshot.child('adInfo/adPhoto').val()+"' width='100%'/>"+
                             "</Advertisement>"+
                             "<br/>"
-        }); 
+        });
     }
 
     render() {
+        let petCard = this.state.pet.map(pet=>{
+            return(
+                <PetCard user={this.state.userId} pet={pet}/>
+            )
+        })
+
         const {sexo, especie} = this.state
         return (
             <div>
@@ -253,12 +239,12 @@ class FilterForm extends React.Component {
                             />
                             <br/><br/>
                             <button class="negative ui button" onClick = {this.handleClick}>Eliminar filtro</button>
-
                         </div>
                     </Grid.Column>
                     <Grid.Column width={9} >
-                        <div class='ui cards' id ='cardPets'>
-                        </div>
+                        <Card.Group>
+                        {petCard}
+                        </Card.Group>
                     </Grid.Column>
                     <Grid.Column width={3} >
                         <div style={{ marginTop: '7em' }} class= "ui sticky fixed top" id ='anuncios'> 
