@@ -174,7 +174,7 @@ class MobileContainer extends React.Component {
     }
 
     
-    componentDidMount() {
+    /*componentDidMount() {
         const card = document.querySelector("#cardVets");
         card.innerHTML = "";
 
@@ -201,7 +201,7 @@ class MobileContainer extends React.Component {
                                 "</div></div>"
 
         });
-    }
+    }*/
 
     render() {
         const { children } = this.props
