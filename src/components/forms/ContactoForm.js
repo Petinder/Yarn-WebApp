@@ -39,7 +39,7 @@ class ContactoForm extends React.Component {
                     </Menu.Item>
                     <Menu.Item position='right'>
                         <Menu.Item as='a'>
-                            <a class="signo popup icon button" data-tooltip="Regresar al inicio" data-position="bottom left" role="button" active href = "/login">
+                            <a class="signo popup icon button" data-tooltip="Regresar al inicio" data-position="bottom right" role="button" active href = "/login">
                             <i class="home icon"></i>
                             </a>
                         </Menu.Item>
