@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Button, FormField, Header, Grid, Visibility, Responsive,
-    Image, Container, Menu, Radio, TextArea, Progress, Segment, Message, Label, Icon,
+    Image, Container, Menu, Radio, TextArea, Progress, Label, Icon,
     Modal} from 'semantic-ui-react';
 import { DateInput } from 'semantic-ui-calendar-react';
 import Validator from 'validator';
@@ -197,7 +197,7 @@ class DesktopContainer extends React.Component {
     }
     
     goHome(){
-        if (this.state.wasPressed = true){
+        if (this.state.wasPressed === true){
             console.log('wasPressed');
         }else{
             console.log('wasNotPressed');
@@ -668,7 +668,7 @@ class MobileContainer extends React.Component {
     }
     
     goHome(){
-        if (this.state.wasPressed = true){
+        if (this.state.wasPressed === true){
             console.log('wasPressed');
         }else{
             console.log('wasNotPressed');
@@ -731,7 +731,6 @@ class MobileContainer extends React.Component {
 
     render() {
         const { children } = this.props
-        const { sidebarOpened } = this.state
         return (
             <Responsive maxWidth={Responsive.onlyMobile.maxWidth}>
             <Visibility

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Button, Rating, Image, Grid, Container, Menu, Card} from 'semantic-ui-react';
+import { Form, Image, Grid, Container, Menu, Card} from 'semantic-ui-react';
 import firebase from 'firebase';
 import icono from './petinder.ico';
 import PetCard from './PetCard';
@@ -34,12 +34,12 @@ class FilterForm extends React.Component {
 
     handleChangeR = (e, { value }) => {
         this.setState({ especie: value });
-        this.state.pet.length=0
+        this.state.pet.length = 0
         this.componentRand(value, 'especie');
     }
     handleChangeS = (e, { value }) => {
         this.setState({ sexo: value });
-        this.state.pet.length=0
+        this.state.pet.length = 0
         this.componentRand(value, 'sexo');
     }
 
@@ -155,7 +155,7 @@ class FilterForm extends React.Component {
     }
 
     componentDidMount() {
-        this.state.pet.length=0
+        this.state.pet.length = 0
 
         this.state.rootRef.on('child_added', snapshot => {
             this.tarjetasPet(snapshot)

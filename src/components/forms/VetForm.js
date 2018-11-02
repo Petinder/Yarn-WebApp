@@ -1,6 +1,5 @@
 import React from 'react';
-import { Form, Button, FormField, Message, Header, Radio, FormRadio, Table,
-  Responsive, Visibility, Image, Grid, Container, Menu, Icon, Modal } from 'semantic-ui-react';
+import { Form, Responsive, Visibility, Image, Container, Menu } from 'semantic-ui-react';
 import firebase from 'firebase';
 import PropTypes from 'prop-types';
 import icono from './petinder.ico';

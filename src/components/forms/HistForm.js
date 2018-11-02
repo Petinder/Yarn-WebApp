@@ -1,13 +1,12 @@
 import React from 'react';
-import { Form, Button, FormField, Message, Header, Radio, FormRadio, Table, Responsive, Visibility,
-    Image, Grid, Container, Menu, Icon, Divider, Transition, Progress, Input, Label} from 'semantic-ui-react';
+import { Form, Button, FormField, Header, Table, Responsive, Visibility,
+    Image, Grid, Container, Menu, Icon, Divider, Transition, Progress, Label} from 'semantic-ui-react';
 import { DateInput } from 'semantic-ui-calendar-react';
 import Validator from 'validator';
 import PropTypes from 'prop-types';
 import firebase from 'firebase';
 import 'firebase/database';
 import icono from './petinder.ico';
-import { contains } from '@firebase/util';
 
 
 const HomepageHeading = ({ mobile }) => (
