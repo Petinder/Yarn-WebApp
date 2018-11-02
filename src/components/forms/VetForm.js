@@ -1,8 +1,6 @@
 import React from 'react';
-import { Form, Image, Container, Menu,
-Header, Responsive, Segment } from 'semantic-ui-react';
+import { Form, Image, Container, Menu, } from 'semantic-ui-react';
 import firebase from 'firebase';
-import PropTypes from 'prop-types';
 import icono from './petinder.ico';
  
 class VetForm extends React.Component {
