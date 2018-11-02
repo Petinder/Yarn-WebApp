@@ -95,7 +95,7 @@ class VetForm extends React.Component {
                                 </a>
                             </Menu.Item>
                             <Menu.Item as='a'>
-                                <a class="syringe popup icon" data-tooltip="Historial de vacunas" data-position={ this.state.isMobile ? "bottom right" : "bottom left" } href = "/history" role="button">
+                                <a class="syringe popup icon" data-tooltip="Historial de vacunas" data-position={ this.state.isMobile ? "bottom right" : "bottom center" } href = "/history" role="button">
                                 <i class="syringe icon"></i>
                                 </a>
                             </Menu.Item>
