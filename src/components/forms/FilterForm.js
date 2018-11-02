@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Image, Grid, Container, Menu, Card} from 'semantic-ui-react';
+import { Form, Image, Grid, Container, Menu, Card, Segment} from 'semantic-ui-react';
 import firebase from 'firebase';
 import icono from './petinder.ico';
 import PetCard from './PetCard';
@@ -18,6 +18,7 @@ class FilterForm extends React.Component {
     constructor() {
         super();
         this.state = {
+            isMobile: window.innerWidth < 768,
             radio: "",
             sexo: "",
             especie: "",
@@ -30,7 +31,13 @@ class FilterForm extends React.Component {
         this.handleChangeR = this.handleChangeR.bind(this);
         this.handleChangeS = this.handleChangeS.bind(this);
         this.componentRand = this.componentRand.bind(this);
-      }
+    }
+
+    updateIsMobile=() => {
+        this.setState({
+            isMobile: window.innerWidth < 768
+        });
+    }
 
     handleChangeR = (e, { value }) => {
         this.setState({ especie: value });
@@ -44,7 +51,6 @@ class FilterForm extends React.Component {
     }
 
     tarjetasPet = (snapshot) =>{
-        //console.log(snapshot);
         this.state.pet.push({key: snapshot.key,
                                 petPhoto: snapshot.child('petInfo/petPhoto').val(),
                                 petName: snapshot.child('petInfo/petName').val(),  
@@ -57,10 +63,8 @@ class FilterForm extends React.Component {
 
     handleLogout () {
         firebase.auth().signOut().then(function() {
-            // Sign-out successful.
             console.log("Exito");
           }).catch(function(error) {
-            // An error happened.
             console.log("Hay error", error);
           });
     }
@@ -71,7 +75,6 @@ class FilterForm extends React.Component {
                 var key = "";
                 firebase.database().ref('userPets').orderByChild('ownerInfo/mail').equalTo(user.email).once("value").then((snapshot) => {
                     if (snapshot.exists()){
-                        //console.log(snapshot.val());
                         snapshot.forEach((childSnapshot) => {
                             key = childSnapshot.key;
                             this.getUserId(key);
@@ -90,8 +93,6 @@ class FilterForm extends React.Component {
     }
 
     componentRand(value, filtro) {
-        //const rootRef = firebase.database().ref().child('userPets');
-
         if(filtro === 'sexo'){
             if(this.state.especie === ""){
                 this.state.rootRef.on('child_added', snapshot => {
@@ -155,6 +156,7 @@ class FilterForm extends React.Component {
     }
 
     componentDidMount() {
+        window.addEventListener('resize', this.updateIsMobile);
         this.state.pet.length = 0
 
         this.state.rootRef.on('child_added', snapshot => {
@@ -173,6 +175,10 @@ class FilterForm extends React.Component {
         });
     }
 
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateIsMobile);
+    }
+
     render() {
         let petCard = this.state.pet.map(pet=>{
             return(
@@ -185,7 +191,7 @@ class FilterForm extends React.Component {
             <div>
                 <Menu fixed='top' inverted color='yellow'>
                 <Container>
-                    <Menu.Item as='a' header>
+                    <Menu.Item as='a' header fitted={this.state.isMobile}>
                     <Image size='mini' src={icono} style={{ marginRight: '1.5em' }} />
                     Petinder
                     </Menu.Item>
@@ -197,17 +203,17 @@ class FilterForm extends React.Component {
                             </a>
                         </Menu.Item>
                         <Menu.Item as='a'>
-                            <a class="syringe popup icon" data-tooltip="Historial de vacunas" data-position="bottom center" href = "/history" role="button">
+                            <a class="syringe popup icon" data-tooltip="Historial de vacunas" data-position={ this.state.isMobile ? "bottom right" : "bottom center" } href = "/history" role="button">
                             <i class="syringe icon"></i>
                             </a>
                         </Menu.Item>
                         <Menu.Item as='a'>
-                            <a class="userm popup icon" data-tooltip="Directorio de veterinarios" data-position="bottom left" href = "/Vet" role="button">
+                            <a class="userm popup icon" data-tooltip="Directorio de veterinarios" data-position={ this.state.isMobile ? "bottom right" : "bottom center" } href = "/Vet" role="button">
                             <i class="user md icon"></i>
                             </a>
                         </Menu.Item>
                         <Menu.Item as='a'>
-                            <a class="signo popup icon button" data-tooltip="Cerrar sesión" data-position="bottom left" role="button" href = "/login" onClick={this.handleLogout}>
+                            <a class="signo popup icon button" data-tooltip="Cerrar sesión" data-position={ this.state.isMobile ? "bottom right" : "bottom left" } role="button" href = "/login" onClick={this.handleLogout}>
                             <i class="sign out alternate icon"></i>
                             </a>
                         </Menu.Item>
@@ -215,9 +221,12 @@ class FilterForm extends React.Component {
                 </Container>
                 </Menu>
 
-                <Grid centered columns={3} style={{ marginTop: '3em' }}>
-                    <Grid.Column width={4} >
-                        <div style={{ marginTop: '7em' }} class= "ui sticky fixed top">
+                <Segment vertical style={ this.state.isMobile ? { padding: '5em 0em', marginTop: '1em' } : { padding: '5em 0em', marginTop: '3em' } }>
+                <Container>
+                    <Grid divided stackable>
+                    <Grid.Row>
+                        <Grid.Column width={4}>
+                        <div style={ this.state.isMobile ? { marginTop: '1em' } : { marginTop: '7em' } } class={ this.state.isMobile ? "ui" : "ui sticky fixed top" } >
                             <Form.Select
                                 fluid
                                 selection
@@ -240,17 +249,20 @@ class FilterForm extends React.Component {
                             <br/><br/>
                             <button class="negative ui button" onClick = {this.handleClick}>Eliminar filtro</button>
                         </div>
-                    </Grid.Column>
-                    <Grid.Column width={9} >
-                        <Card.Group>
-                        {petCard}
-                        </Card.Group>
-                    </Grid.Column>
-                    <Grid.Column width={3} >
-                        <div style={{ marginTop: '7em' }} class= "ui sticky fixed top" id ='anuncios'> 
-                        </div>
-                    </Grid.Column>
-                </Grid>
+                        </Grid.Column>
+                        <Grid.Column width={9} >
+                            <Card.Group>
+                            {petCard}
+                            </Card.Group>
+                        </Grid.Column>
+                        <Grid.Column width={3} >
+                            <div style={ this.state.isMobile ? { marginTop: '1em' } : { marginTop: '7em' } } class={ this.state.isMobile ? "ui" : "ui sticky fixed top" } id ='anuncios'> 
+                            </div>
+                        </Grid.Column>
+                    </Grid.Row>
+                    </Grid>
+                </Container>
+                </Segment>
             </div>
         );
     }
