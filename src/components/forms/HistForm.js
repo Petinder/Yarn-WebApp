@@ -48,7 +48,6 @@ class HistForm extends React.Component {
                 var key = "";
                 firebase.database().ref('userPets').orderByChild('ownerInfo/mail').equalTo(user.email).once("value").then((snapshot) => {
                     if (snapshot.exists()){
-                        console.log(snapshot.val());
                         snapshot.forEach((childSnapshot) => {
                             key = childSnapshot.key;
                             this.getUserId(key);       
@@ -63,7 +62,6 @@ class HistForm extends React.Component {
 
     getUserId(key){
         this.setState({userId: key});
-        console.log("User logged: " + key);
         this.llenarTabla();
     }
 
@@ -73,7 +71,6 @@ class HistForm extends React.Component {
         const task = storageRef.put(file);
         task.on('state_changed', (snapshot) => {
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done');
             this.setState({
                 uploadValue: progress
             })
@@ -113,7 +110,6 @@ class HistForm extends React.Component {
                 Vet: this.state.data.vetName,
                 Date: this.state.vaccineDate
         }
-        console.log(record)
         const dbRef = firebase.database().ref('userPets/' + this.state.userId +'/petInfo/petVaccinations');
         const Data = dbRef.push();
         Data.set(record);

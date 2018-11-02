@@ -61,7 +61,6 @@ class VetForm extends React.Component {
                 var key = "";
                 firebase.database().ref('userPets').orderByChild('ownerInfo/mail').equalTo(user.email).once("value").then((snapshot) => {
                     if (snapshot.exists()){
-                        console.log(snapshot.val());
                         snapshot.forEach((childSnapshot) => {
                             key = childSnapshot.key;
                             this.getUserId(key);
@@ -76,7 +75,6 @@ class VetForm extends React.Component {
 
     getUserId(key){
         this.setState({userId: key});
-        console.log("User logged: " + key);
     }
     
     render() {
