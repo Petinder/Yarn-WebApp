@@ -20,57 +20,8 @@ import icono from './petinder.ico';
   ]
 
   let optionsRaza = []
-
-  const optionsGato = [
-    { key: '0', text: 'Ragdoll', value: 'Ragdoll' },
-    { key: '1', text: 'Angora', value: 'Angora' },
-    { key: '2', text: 'British Shorthair', value: 'British Shorthair' },
-    { key: '3', text: 'Scottish Fold', value: 'Scottish Fold' },    
-    { key: '4', text: 'Birmano', value: 'Birmano' },
-    { key: '5', text: 'Persa', value: 'Persa' },
-    { key: '6', text: 'Ruso azul', value: 'Ruso azul' },
-    { key: '7', text: 'Siamés', value: 'Siamés' },
-    { key: '8', text: 'Snowshoe', value: 'Snowshoe' },
-    { key: '9', text: 'Cartujo', value: 'Cartujo' },
-    { key: '10', text: 'Bombay', value: 'Bombay' },
-    { key: '11', text: 'Korat', value: 'Korat' },
-    { key: '12', text: 'Balinés', value: 'Balinés' },
-    { key: '13', text: 'Burmés', value: 'Burmés' },
-    { key: '14', text: 'Habano', value: 'Habano' },
-    { key: '15', text: 'Cornish Rex', value: 'Cornish Rex' },
-    { key: '16', text: 'Oriental', value: 'Oriental' },
-    { key: '17', text: 'Devon Rex', value: 'Devon Rex' },
-    { key: '18', text: 'Seychellois', value: 'Seychellois' },
-    { key: '19', text: 'Tonkinés', value: 'Tonkinés' },
-    { key: '20', text: 'Cocker', value: 'Cocker' },
-    { key: '21', text: 'Munchkin', value: 'Munchkin' } 
-  ]
-
-  const optionsPerro = [
-    { key: '0', text: 'Husky Siberiano', value: 'Husky Siberiano' },
-    { key: '1', text: 'Golden Retriever', value: 'Golden Retriever' },
-    { key: '2', text: 'Labrador Retriever', value: 'Labrador Retriever' },
-    { key: '3', text: 'Pastor Alemán', value: 'Pastor Alemán' },    
-    { key: '4', text: 'Beagle', value: 'Beagle' },
-    { key: '5', text: 'Alaskan Malamute', value: 'Alaskan Malamute' },
-    { key: '6', text: 'San Bernardo', value: 'San Bernardo' },
-    { key: '7', text: 'Boxer', value: 'Boxer' },
-    { key: '8', text: 'Rottweiler', value: 'Rottweiler' },
-    { key: '9', text: 'Samoyedo', value: 'Samoyedo' },
-    { key: '10', text: 'Pit Bull', value: 'Pit Bull' },
-    { key: '11', text: 'Chow Chow', value: 'Chow Chow' },
-    { key: '12', text: 'Dálmata', value: 'Dálmata' },
-    { key: '13', text: 'Collie', value: 'Collie' },
-    { key: '14', text: 'Carlino', value: 'Carlino' },
-    { key: '15', text: 'Doberman', value: 'Doberman' },
-    { key: '16', text: 'Gran Danés', value: 'Gran Danés' },
-    { key: '17', text: 'Cocker Inglés', value: 'Cocker Inglés' },
-    { key: '18', text: 'Schnauzer', value: 'Schnauzer' },
-    { key: '19', text: 'Chihuahua', value: 'Chihuahua' },
-    { key: '20', text: 'Pug', value: 'Pug' },
-    { key: '21', text: 'Terrier', value: 'Terrier' },
-    { key: '22', text: 'Bulldog', value: 'Bulldog' }
-  ]
+  let optionsCat = []
+  let optionsDog = []
 
 const HomepageHeading = ({ mobile }) => (
     <Container text>
@@ -154,9 +105,21 @@ class DesktopContainer extends React.Component {
     profile (snapshot, key) {
         var currOption = [];
         if (snapshot.child(key + '/petInfo/petSpecies').val() === 'Gato'){
-            currOption = optionsGato
+            firebase.database().ref().child('optionsCat').on('value', function(snapshot) {
+                console.log(snapshot.val());
+                snapshot.val().map((x, index) =>{ 
+                    optionsCat.push({key: index, text: x.text, value: x.text})
+                });
+            });
+            currOption = optionsCat
         }else{
-            currOption = optionsPerro
+            firebase.database().ref().child('optionsDog').on('value', function(snapshot) {
+                console.log(snapshot.val());
+                snapshot.val().map((x, index) =>{ 
+                    optionsDog.push({key: index, text: x.text, value: x.text})
+                });
+            });
+            currOption = optionsDog
         }
         this.setState({
             ownerAddress: snapshot.child(key + '/ownerInfo/address').val(),
@@ -253,9 +216,22 @@ class DesktopContainer extends React.Component {
     handleChangeSpecies = (e, { value }) => {
         this.setState({ petSpecies : value });
         if (value === 'Gato'){
-            optionsRaza = optionsGato
+            firebase.database().ref().child('optionsCat').on('value', function(snapshot) {
+                console.log(snapshot.val());
+                snapshot.val().map((x, index) =>{ 
+                    optionsCat.push({key: index, text: x.text, value: x.text})
+                });
+            });
+            optionsRaza = optionsCat
+
         }else{
-            optionsRaza = optionsPerro
+            firebase.database().ref().child('optionsDog').on('value', function(snapshot) {
+                console.log(snapshot.val());
+                snapshot.val().map((x, index) =>{ 
+                    optionsDog.push({key: index, text: x.text, value: x.text})
+                });
+            });
+            optionsRaza = optionsDog
         }
     }
 
@@ -600,9 +576,21 @@ class MobileContainer extends React.Component {
     profile (snapshot, key) {
         var currOption = [];
         if (snapshot.child(key + '/petInfo/petSpecies').val() === 'Gato'){
-            currOption = optionsGato
+            firebase.database().ref().child('optionsCat').on('value', function(snapshot) {
+                console.log(snapshot.val());
+                snapshot.val().map((x, index) =>{ 
+                    optionsCat.push({key: index, text: x.text, value: x.text})
+                });
+            });
+            currOption = optionsCat
         }else{
-            currOption = optionsPerro
+            firebase.database().ref().child('optionsDog').on('value', function(snapshot) {
+                console.log(snapshot.val());
+                snapshot.val().map((x, index) =>{ 
+                    optionsDog.push({key: index, text: x.text, value: x.text})
+                });
+            });
+            currOption = optionsDog
         }
         this.setState({
             ownerAddress: snapshot.child(key + '/ownerInfo/address').val(),
@@ -699,9 +687,21 @@ class MobileContainer extends React.Component {
     handleChangeSpecies = (e, { value }) => {
         this.setState({ petSpecies : value });
         if (value === 'Gato'){
-            optionsRaza = optionsGato
+            firebase.database().ref().child('optionsCat').on('value', function(snapshot) {
+                console.log(snapshot.val());
+                snapshot.val().map((x, index) =>{ 
+                    optionsCat.push({key: index, text: x.text, value: x.text})
+                });
+            });
+            optionsRaza = optionsCat
         }else{
-            optionsRaza = optionsPerro
+            firebase.database().ref().child('optionsDog').on('value', function(snapshot) {
+                console.log(snapshot.val());
+                snapshot.val().map((x, index) =>{ 
+                    optionsCat.push({key: index, text: x.text, value: x.text})
+                });
+            });
+            optionsRaza = optionsDog
         }
     }
 
