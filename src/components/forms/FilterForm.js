@@ -51,6 +51,18 @@ class FilterForm extends React.Component {
     }
 
     tarjetasPet = (snapshot) =>{
+        let cantidadlikes = snapshot.child('likeInfo').val();
+        let likes;
+        let encanta=[];
+
+        if (cantidadlikes !== null){
+            likes = Object.keys(cantidadlikes).length;
+            Object.keys(cantidadlikes).forEach( function(valor) {
+                encanta.push(snapshot.child('likeInfo/'+valor+'/keyPet').val());
+            });
+        }else{
+            likes = 0;
+        }
         this.state.pet.push({key: snapshot.key,
                                 petPhoto: snapshot.child('petInfo/petPhoto').val(),
                                 petName: snapshot.child('petInfo/petName').val(),  
@@ -58,7 +70,9 @@ class FilterForm extends React.Component {
                                 petDescription: snapshot.child('petInfo/petDescription').val(),
                                 petBirthDate: snapshot.child('petInfo/petBirthDate').val(),
                                 petSpecies: snapshot.child('petInfo/petSpecies').val(),
-                                phone: snapshot.child('ownerInfo/phone').val()}, )
+                                phone: snapshot.child('ownerInfo/phone').val(),
+                                like: likes,
+                                encanta: encanta}, )
     }
 
     handleLogout () {
@@ -84,7 +98,7 @@ class FilterForm extends React.Component {
             } else {
                 window.location.pathname = '/login'
             }
-          });
+        });
     }
 
     getUserId(key){
@@ -157,17 +171,16 @@ class FilterForm extends React.Component {
 
     componentDidMount() {
         window.addEventListener('resize', this.updateIsMobile);
-        this.state.pet.length = 0
+        this.state.pet.length = 0;
 
         this.state.rootRef.on('child_added', snapshot => {
             this.tarjetasPet(snapshot)
         });
-
+        
         const anuncios = document.querySelector("#anuncios");
         anuncios.innerHTML = "";
 
         this.state.rootRefAnun.on('child_added', snapshot => {
-            console.log("child key: " + snapshot.key);
             anuncios.innerHTML += "<Advertisement unit='ui square'>"+
                             "<img src='"+ snapshot.child('adInfo/adPhoto').val()+"' width='100%'/>"+
                             "</Advertisement>"+

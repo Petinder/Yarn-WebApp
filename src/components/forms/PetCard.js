@@ -1,24 +1,34 @@
 import React, {Component} from 'react';
-import { Card, Button, Popup, Rating, Image } from 'semantic-ui-react';
+import { Card, Button, Popup, Label, Image, Icon } from 'semantic-ui-react';
 import firebase from 'firebase';
 import 'firebase/database';
 
 class PetCard extends Component {
     constructor(props){
         super(props);
-        this.state={};
+        this.state={active: false};
     }
 
     handleLike = () =>{
         this.setState({ active: !this.state.active })
-        
-        const dbRef = firebase.database().ref('userPets/' + this.props.pet.key  +'/likeInfo');
-        const Data = dbRef.push();
-        Data.set({keyPet: this.props.user});
+        if(!this.state.active){
+            console.log("Guardar en base de datos")
+            const dbRef = firebase.database().ref('userPets/' + this.props.pet.key  +'/likeInfo');
+            const Data = dbRef.push();
+            Data.set({keyPet: this.props.user});
+        }else{
+            //this.props.pet.encanta.map(x => { console.log(x)})
+            console.log("Eliminar " + this.props.pet.key + " "+ this.props.user);
+        }
     }
 
     render(){
-        const { active } = this.state
+        let { active } = this.state;
+        this.props.pet.encanta.map(x => {
+            if (x === this.props.user.toString() ){
+                console.log("Debe cambiar boton a activo para la mascota " + this.props.pet.key)
+            }
+        });
 
         let buttonLike = "";
         if(this.props.pet.petSpecies === "Perro"){
@@ -30,9 +40,10 @@ class PetCard extends Component {
         return(
             <Card>
                 <Popup trigger={<Image src={this.props.pet.petPhoto} />} inverted>
-                    <Popup.Header>Rating</Popup.Header>
                     <Popup.Content>
-                    <Rating icon='star' defaultRating={3} maxRating={4} />
+                    <Label as='a' color='green'>
+                        <Icon name='heart' /> {this.props.pet.like}
+                    </Label>
                     </Popup.Content>
                 </Popup>
                 <Card.Content>
@@ -44,7 +55,7 @@ class PetCard extends Component {
                 </Card.Content>
                 <Card.Content extra>
                 <div class='ui two buttons'>
-                <Button toggle active={active} onClick={this.handleLike} color='gray'><i class='heart outline icon left'></i>{buttonLike}</Button>
+                <Button toggle active={active} onClick={this.handleLike} color='grey'><i class='heart outline icon left'></i>{buttonLike}</Button>
                 <Popup trigger={<Button color='blue'>Conóceme</Button>} inverted>
                     <Popup.Header>Contáctame al número</Popup.Header>
                     <Popup.Content>
