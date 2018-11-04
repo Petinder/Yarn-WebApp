@@ -34,15 +34,19 @@ class VetForm extends React.Component {
                                     "</div>"+
                                     "<div class='content'><br/>"+
                                     "<a class='header'>"+snapshot.child('services/clinicName').val()+"<br/>"+snapshot.child('vetInfo/name').val()+"</a>"+
+                                    "<div class='description'>"+
+                                    snapshot.child('services/vetDescription').val()+
+                                    "</div>"+
                                     "<div class='meta'>"+
                                         "<span class='cinema'>Visítanos en "+snapshot.child('vetInfo/address').val()+"<br/>Contáctanos "+snapshot.child('services/clinicPhone').val()+" - "+snapshot.child('vetInfo/phone').val()+"</span>"+
                                     "</div>"+
                                     "<div class='description'>"+
-                                    snapshot.child('services/vetDescription').val()+" Ofrecemos: "+snapshot.child('services/clinicAditionalServices').val()+
+                                    "Servicios adicionales: "+snapshot.child('services/clinicAditionalServices').val()+
                                     "</div>"+
                                     "<div class='extra'>"+
                                         "<div class='ui green label' >"+snapshot.child('services/animalThatServes').val()+"</div>"+
                                         "<div class='ui blue label' >"+snapshot.child('experience/AditionalExpertise').val()+"</div>"+
+                                        "<div class='ui purple label' >"+snapshot.child('services/days').val()+"</div>"+
                                     "</div>"+
                                     "</div>"+
                                 "</div>"+
