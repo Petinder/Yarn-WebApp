@@ -32,6 +32,11 @@ class PetCard extends Component {
         }
     }
 
+    handlec = () =>{
+        console.log("email ");
+        this.sendEmail(this.props.pet.mail, this.props.pet.petName, this.props.pet.phone)
+    }
+
     render(){
         let { active } = this.state;
         this.props.pet.encanta.map(x => {
@@ -69,8 +74,8 @@ class PetCard extends Component {
                 <Modal trigger={<Button color='blue'>Conóceme</Button>} inverted>
                     <Modal.Header>Contáctame al número</Modal.Header>
                     <Modal.Content>
-                    <Button color='orange' inverted  onClick={this.sendEmail(this.props.pet.mail, this.props.pet.petName, this.props.pet.phone)}>
-                        <Icon name='home' /> Enviar correo!
+                    <Button color='orange' inverted  onClick={this.handlec}>
+                        <Icon name='home' /> ¡Enviar correo!
                     </Button>
                     </Modal.Content>
                 </Modal>
