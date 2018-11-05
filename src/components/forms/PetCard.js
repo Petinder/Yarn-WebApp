@@ -72,7 +72,7 @@ class PetCard extends Component {
                 <div class='ui two buttons'>
                 <Button toggle active={active} onClick={this.handleLike} color='grey'><i class='heart outline icon left'></i>{buttonLike}</Button>
                 <Modal trigger={<Button color='blue'>Conóceme</Button>} inverted>
-                    <Modal.Header>Contáctame al número</Modal.Header>
+                    <Modal.Header>¿Quieres contactar al dueño de la mascota?</Modal.Header>
                     <Modal.Content>
                     <Button color='orange' inverted  onClick={this.handlec}>
                         <Icon name='home' /> ¡Enviar correo!

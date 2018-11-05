@@ -4,11 +4,7 @@
   "private": true,
   "dependencies": {
     "@sendgrid/mail": "^6.3.1",
-<<<<<<< HEAD
-=======
-    "axios": "^0.18.0",
     "concurrently": "^4.0.1",
->>>>>>> 051f2983fd9d6c69807cf6b15b63c5c114fab25c
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "firebase": "^5.5.5",
