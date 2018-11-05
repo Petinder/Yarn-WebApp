@@ -22,3 +22,4 @@ yarn-error.log*
 
 # Untracked files:
 src/config.js
+server/config.js

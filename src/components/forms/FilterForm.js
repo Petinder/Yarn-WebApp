@@ -71,6 +71,7 @@ class FilterForm extends React.Component {
                                 petBirthDate: snapshot.child('petInfo/petBirthDate').val(),
                                 petSpecies: snapshot.child('petInfo/petSpecies').val(),
                                 phone: snapshot.child('ownerInfo/phone').val(),
+                                mail: snapshot.child('ownerInfo/mail').val(),
                                 like: likes,
                                 encanta: encanta}, )
     }
