@@ -1,12 +1,37 @@
 import React, {Component} from 'react';
-import { Card, Button, Popup, Label, Image, Icon } from 'semantic-ui-react';
+import { Card, Button, Popup, Label, Image, Icon, Modal } from 'semantic-ui-react';
 import firebase from 'firebase';
 import 'firebase/database';
+import {mailgunKey} from '../../config';
+import axios from 'axios';
 
 class PetCard extends Component {
     constructor(props){
         super(props);
         this.state={active: false};
+    }
+
+    sendMail(sendTo, mssg){
+        console.log('send mail');
+        var data = {
+            service_id: 'gmail',
+            template_id: 'petinder',
+            user_id: 'user_Ra5X3rQvPEA3TcKETNOM2',
+            template_params: {
+                'user_name': 'James',
+                'user_email': 'mimontenegro@ufm.edu'
+            }
+        };
+
+        axios({
+            method: 'post',
+            url: 'https://api.emailjs.com/api/v1.0/email/send',
+            data: JSON.stringify(data)
+          }).then(function (response) {
+            console.log('email was sent');
+          }).catch(function (err) {
+            console.log(err);
+          });;
     }
 
     handleLike = () =>{
@@ -56,13 +81,16 @@ class PetCard extends Component {
                 <Card.Content extra>
                 <div class='ui two buttons'>
                 <Button toggle active={active} onClick={this.handleLike} color='grey'><i class='heart outline icon left'></i>{buttonLike}</Button>
-                <Popup trigger={<Button color='blue'>Conóceme</Button>} inverted>
-                    <Popup.Header>Contáctame al número</Popup.Header>
-                    <Popup.Content>
+                <Modal trigger={<Button color='blue'>Conóceme</Button>} inverted>
+                    <Modal.Header>Contáctame al número</Modal.Header>
+                    <Modal.Content>
                     <i class="whatsapp icon green"></i>
                     {this.props.pet.phone}
-                    </Popup.Content>
-                </Popup>
+                    <Button color='orange' inverted  onClick={this.sendMail}>
+                        <Icon name='home' /> Enviar correo!
+                    </Button>
+                    </Modal.Content>
+                </Modal>
                 </div>
                 </Card.Content>
             </Card>
