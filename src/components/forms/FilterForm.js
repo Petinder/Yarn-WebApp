@@ -183,7 +183,9 @@ class FilterForm extends React.Component {
 
         this.state.rootRefAnun.on('child_added', snapshot => {
             anuncios.innerHTML += "<Advertisement unit='ui square'>"+
+                            "<a href = '"+snapshot.child('adInfo/adUrl').val()+"' target = '_blank'>" + 
                             "<img src='"+ snapshot.child('adInfo/adPhoto').val()+"' width='100%'/>"+
+                            "</a>"+
                             "</Advertisement>"+
                             "<br/>"
         });
