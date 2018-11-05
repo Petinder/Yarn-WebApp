@@ -92,7 +92,7 @@ class HistForm extends React.Component {
                 vacunas = childSnapshot.child('petInfo/petVaccinations').val();
                 Object.keys(vacunas).forEach(function(key) {
                     card.innerHTML += "<tr class=''>"+
-                                            "<td class='single line'><i aria-hidden='true' class='file outline icon' /> "+vacunas[key]['PhotoName']+"</td>"+
+                                            "<td class='single line'><i aria-hidden='true' class='file outline icon' /> <a href='"+vacunas[key]['Photo']+"'>Comprobante</a></td>"+
                                             "<td class=''>"+vacunas[key]['Name']+"</td>"+
                                             "<td class=''>"+vacunas[key]['Vet']+"</td>"+
                                             "<td class='right aligned'>"+vacunas[key]['Date']+"</td>"+
@@ -251,7 +251,7 @@ class HistForm extends React.Component {
                                 onChange={this.onChange}/>
                             </FormField>
                             <p align="center">
-                            <Button onClick={this.handleText} primary>Registrar</Button>
+                            <Button onClick={this.handleText} primary>Registrar </Button>
                             </p>
                             <br/>
                         </Grid.Column>

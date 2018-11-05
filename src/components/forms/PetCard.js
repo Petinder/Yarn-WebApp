@@ -64,7 +64,7 @@ class PetCard extends Component {
         
         return(
             <Card>
-                <Popup trigger={<Image src={this.props.pet.petPhoto} />} inverted>
+                <Popup trigger={<Image src={this.props.pet.petPhoto} width='290' height='270' />} inverted>
                     <Popup.Content>
                     <Label as='a' color='green'>
                         <Icon name='heart' /> {this.props.pet.like}
