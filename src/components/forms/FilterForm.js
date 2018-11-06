@@ -73,7 +73,8 @@ class FilterForm extends React.Component {
                                 phone: snapshot.child('ownerInfo/phone').val(),
                                 mail: snapshot.child('ownerInfo/mail').val(),
                                 like: likes,
-                                encanta: encanta}, )
+                                encanta: encanta,
+                                vaccinations: snapshot.child('petInfo/petVaccinations').val()}, )
     }
 
     handleLogout () {
@@ -214,23 +215,23 @@ class FilterForm extends React.Component {
 
                     <Menu.Item position='right'>
                         <Menu.Item as='a'>
-                            <a class="paw popup icon button" data-tooltip="Editar perfil" data-position="bottom right" href = "/profile" role="button">
-                            <i class="paw icon" ></i>
+                            <a className="paw popup icon button" data-tooltip="Editar perfil" data-position="bottom right" href = "/profile" role="button">
+                            <i className="paw icon" ></i>
                             </a>
                         </Menu.Item>
                         <Menu.Item as='a'>
-                            <a class="syringe popup icon" data-tooltip="Historial de vacunas" data-position={ this.state.isMobile ? "bottom right" : "bottom center" } href = "/history" role="button">
-                            <i class="syringe icon"></i>
+                            <a className="syringe popup icon" data-tooltip="Historial de vacunas" data-position={ this.state.isMobile ? "bottom right" : "bottom center" } href = "/history" role="button">
+                            <i className="syringe icon"></i>
                             </a>
                         </Menu.Item>
                         <Menu.Item as='a'>
-                            <a class="userm popup icon" data-tooltip="Directorio de veterinarios" data-position={ this.state.isMobile ? "bottom right" : "bottom center" } href = "/Vet" role="button">
-                            <i class="user md icon"></i>
+                            <a className="userm popup icon" data-tooltip="Directorio de veterinarios" data-position={ this.state.isMobile ? "bottom right" : "bottom center" } href = "/Vet" role="button">
+                            <i className="user md icon"></i>
                             </a>
                         </Menu.Item>
                         <Menu.Item as='a'>
-                            <a class="signo popup icon button" data-tooltip="Cerrar sesión" data-position={ this.state.isMobile ? "bottom right" : "bottom left" } role="button" href = "/login" onClick={this.handleLogout}>
-                            <i class="sign out alternate icon"></i>
+                            <a className="signo popup icon button" data-tooltip="Cerrar sesión" data-position={ this.state.isMobile ? "bottom right" : "bottom left" } role="button" href = "/login" onClick={this.handleLogout}>
+                            <i className="sign out alternate icon"></i>
                             </a>
                         </Menu.Item>
                     </Menu.Item>
@@ -242,7 +243,7 @@ class FilterForm extends React.Component {
                     <Grid divided stackable>
                     <Grid.Row>
                         <Grid.Column width={4}>
-                        <div style={ this.state.isMobile ? { marginTop: '1em' } : { marginTop: '7em' } } class={ this.state.isMobile ? "ui" : "ui sticky fixed top" } >
+                        <div style={ this.state.isMobile ? { marginTop: '1em' } : { marginTop: '7em' } } className={ this.state.isMobile ? "ui" : "ui sticky fixed top" } >
                             <Form.Select
                                 fluid
                                 selection
@@ -263,7 +264,7 @@ class FilterForm extends React.Component {
                                 onChange={this.handleChangeS}
                             />
                             <br/><br/>
-                            <button class="negative ui button" onClick = {this.handleClick}>Eliminar filtro</button>
+                            <button className="negative ui button" onClick = {this.handleClick}>Eliminar filtro</button>
                         </div>
                         </Grid.Column>
                         <Grid.Column width={9} >
