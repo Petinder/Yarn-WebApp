@@ -1,4 +1,0 @@
-// module.js
-var mailKey = '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';
-// export it
-exports.mailKey = mailKey;
