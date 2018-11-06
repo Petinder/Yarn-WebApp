@@ -40,11 +40,15 @@ class PetCard extends Component {
 
     render(){
         let { active } = this.state;
-        /*this.props.pet.encanta.map(x => {
-            if (x === this.props.user.toString() ){
-                console.log("Debe cambiar boton a activo para la mascota " + this.props.pet.key)
-            }
-        });*/
+        if (this.props.pet.encanta.length !== 0){
+            console.log(this.props.pet.encanta);
+            this.props.pet.encanta.map(lik=>{
+                if(lik.toString() === this.props.user.toString()){
+                    console.log(this.props.pet.key);
+                    active = true;
+                }
+            })
+        }
 
         let petCardHist;
         if (this.props.pet.vaccinations !== null){
@@ -83,7 +87,7 @@ class PetCard extends Component {
                 </Card.Content>
                 <Card.Content extra>
                 <div class='ui two buttons'>
-                <Button toggle active={active} onClick={this.handleLike} color='grey'><i class='heart outline icon left'></i>{buttonLike}</Button>
+                <Button toggle active={active} onClick={this.handleLike} disabled={active}><i class='heart outline icon left'></i>{buttonLike}</Button>
                 <Modal trigger={<Button color='blue'>Conóceme</Button>} inverted>
                     <Modal.Header>
                         ¿Quieres contactar al dueño de la mascota?
