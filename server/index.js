@@ -30,7 +30,7 @@ app.get('/send-email', (req,res) => {
 
     //Send Email
     sgMail.send(msg)
-    .then((msg) => console.log(text));
+    .then((msg) => console.log(text)).catch(err => console.error(err));
     console.log('email: ' + text);
 });
 

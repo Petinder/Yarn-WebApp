@@ -23,9 +23,12 @@ class FilterForm extends React.Component {
             sexo: "",
             especie: "",
             userId: "",
+            userMail: "",
+            userPet: "",
+            userPhone: "",
             rootRef: firebase.database().ref().child('userPets'),
             rootRefAnun: firebase.database().ref().child('picturesA').limitToLast(2),
-            pet: [],
+            pet: []
         };
     
         this.handleChangeR = this.handleChangeR.bind(this);
@@ -90,10 +93,13 @@ class FilterForm extends React.Component {
             if (user) {             
                 var key = "";
                 firebase.database().ref('userPets').orderByChild('ownerInfo/mail').equalTo(user.email).once("value").then((snapshot) => {
+                    let correo = Object.values(snapshot.val())[0].ownerInfo.mail;
+                    let telefono = Object.values(snapshot.val())[0].ownerInfo.phone;
+                    let nombremascota = Object.values(snapshot.val())[0].petInfo.petName;
                     if (snapshot.exists()){
                         snapshot.forEach((childSnapshot) => {
                             key = childSnapshot.key;
-                            this.getUserId(key);
+                            this.getUserId(key, correo, telefono, nombremascota);
                         });
                         }
                     })
@@ -103,8 +109,11 @@ class FilterForm extends React.Component {
         });
     }
 
-    getUserId(key){
-        this.setState({userId: key});
+    getUserId(key, mail, phone, pet){
+        this.setState({userId: key,
+            userMail: mail,
+            userPhone: phone,
+            userPet: pet});
         console.log("User logged: " + key);
     }
 
@@ -199,7 +208,7 @@ class FilterForm extends React.Component {
     render() {
         let petCard = this.state.pet.map(pet=>{
             return(
-                <PetCard user={this.state.userId} pet={pet}/>
+                <PetCard user={this.state.userId} userMail={this.state.userMail} userPhone={this.state.userPhone} userPet={this.state.userPet} pet={pet}/>
             )
         })
 
