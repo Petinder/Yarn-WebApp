@@ -24,13 +24,6 @@ let optionsDog = []
 class PetProfileForm extends React.Component {
     constructor () {
         super();
-        this.handleChangeSpecies = this.handleChangeSpecies.bind(this);
-        this.handleChangeSex = this.handleChangeSex.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleText = this.handleText.bind(this);
-        this.handleUpload = this.handleUpload.bind(this);
-        this.onChange = this.onChange.bind(this);
-        this.goHome = this.goHome.bind(this);
         this.state = {
             user: null,
             isMobile: window.innerWidth < 768,
@@ -53,6 +46,13 @@ class PetProfileForm extends React.Component {
             open: false,
             wasPressed: false
         };
+
+        this.handleChangeSpecies = this.handleChangeSpecies.bind(this);
+        this.handleChangeSex = this.handleChangeSex.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleText = this.handleText.bind(this);
+        this.handleUpload = this.handleUpload.bind(this);
+        this.onChange = this.onChange.bind(this);
     }
 
     updateIsMobile=() => {
@@ -95,22 +95,21 @@ class PetProfileForm extends React.Component {
         window.removeEventListener('resize', this.updateIsMobile);
     }
 
-    profile (snapshot, key) {
-        var currOption = [];
+    profile(snapshot, key) {
         if (snapshot.child(key + '/petInfo/petSpecies').val() === 'Gato'){
             firebase.database().ref().child('optionsCat').on('value', function(snapshot) {
                 snapshot.val().map((x, index) =>{ 
                     optionsCat.push({key: index, text: x.text, value: x.text})
                 });
             });
-            currOption = optionsCat
+            optionsRaza = optionsCat
         }else{
             firebase.database().ref().child('optionsDog').on('value', function(snapshot) {
                 snapshot.val().map((x, index) =>{ 
                     optionsDog.push({key: index, text: x.text, value: x.text})
                 });
             });
-            currOption = optionsDog
+            optionsRaza = optionsDog
         }
         this.setState({
             ownerAddress: snapshot.child(key + '/ownerInfo/address').val(),
@@ -118,7 +117,7 @@ class PetProfileForm extends React.Component {
             ownerPhone: snapshot.child(key + '/ownerInfo/phone').val(),
             petName: snapshot.child(key + '/petInfo/petName').val(),
             petSpecies: snapshot.child(key + '/petInfo/petSpecies').val(),
-            optionsRaza: currOption,
+            petBreed: snapshot.child(key + '/petInfo/petBreed').val(),
             petSex: snapshot.child(key + '/petInfo/petSex').val(),
             petAsexed: snapshot.child(key + '/petInfo/petAsexed').val(),
             petBirthDate:snapshot.child(key + '/petInfo/petBirthDate').val(),
@@ -129,7 +128,6 @@ class PetProfileForm extends React.Component {
             userId: key,
             isNew: false
         });
-        this.setState({petBreed: snapshot.child(key + '/petInfo/petBreed').val()});
     }
 
     handleUpload(event) {
@@ -179,14 +177,6 @@ class PetProfileForm extends React.Component {
             dbRefU.update(record.ownerInfo);
             dbRefU = firebase.database().ref('userPets/' + this.state.userId + '/petInfo');
             dbRefU.update(record.petInfo);
-        }
-    }
-    
-    goHome(){
-        if (this.state.wasPressed === true){
-            console.log('wasPressed');
-        }else{
-            console.log('wasNotPressed');
         }
     }
 
@@ -244,7 +234,6 @@ class PetProfileForm extends React.Component {
     };
 
     render() {
-        const { children } = this.props
         return (
             <Form>
                 <Menu fixed='top' inverted color='yellow'>
@@ -255,18 +244,18 @@ class PetProfileForm extends React.Component {
                     </Menu.Item>
                     <Menu.Item position='right'>
                         <Menu.Item as='a'>
-                            <a class="syringe popup icon" data-tooltip="Historial de vacunas" data-position="bottom right" href = "/history" role="button">
-                            <i class="syringe icon"></i>
+                            <a className="syringe popup icon" data-tooltip="Historial de vacunas" data-position="bottom right" href = "/history" role="button">
+                            <i className="syringe icon"></i>
                             </a>
                         </Menu.Item>
                         <Menu.Item as='a'>
-                            <a class="userm popup icon" data-tooltip="Directorio de veterinarios" data-position={ this.state.isMobile ? "bottom right" : "bottom center" } href = "/Vet" role="button">
-                            <i class="user md icon"></i>
+                            <a className="userm popup icon" data-tooltip="Directorio de veterinarios" data-position={ this.state.isMobile ? "bottom right" : "bottom center" } href = "/Vet" role="button">
+                            <i className="user md icon"></i>
                             </a>
                         </Menu.Item>
                         <Menu.Item as='a'>
-                            <a class="signo popup icon button" data-tooltip="Cerrar sesión" data-position={ this.state.isMobile ? "bottom right" : "bottom left" } role="button" href = "/login" onClick={this.handleLogout}>
-                            <i class="sign out alternate icon"></i>
+                            <a className="signo popup icon button" data-tooltip="Cerrar sesión" data-position={ this.state.isMobile ? "bottom right" : "bottom left" } role="button" href = "/login" onClick={this.handleLogout}>
+                            <i className="sign out alternate icon"></i>
                             </a>
                         </Menu.Item>
                     </Menu.Item>
@@ -283,7 +272,7 @@ class PetProfileForm extends React.Component {
                                 <div position="centered">  
                                     <Image width="250" src={this.state.photoURL} centered />
                                     <br/>
-                                    <div class="ui yellow progress">
+                                    <div className="ui yellow progress">
                                     <Progress value={this.state.uploadValue} total='100' progress />
                                     </div>
                                     <p align="center">
@@ -412,7 +401,7 @@ class PetProfileForm extends React.Component {
                                     value={this.state.petDescription}
                                     onChange={this.onChange}
                                     label="Descripción de tu mascota para que los demás la conozcan"
-                                    maxlength = "250"
+                                    maxLength = "250"
                                     placeholder="Breve descripción de 250 caracteres como máximo..."/>
 
                             </Grid.Column>
