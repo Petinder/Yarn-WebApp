@@ -26,6 +26,7 @@ class FilterForm extends React.Component {
             userMail: "",
             userPet: "",
             userPhone: "",
+            userPetImg: "",
             rootRef: firebase.database().ref().child('userPets'),
             rootRefAnun: firebase.database().ref().child('picturesA').limitToLast(2),
             pet: []
@@ -96,10 +97,11 @@ class FilterForm extends React.Component {
                     let correo = Object.values(snapshot.val())[0].ownerInfo.mail;
                     let telefono = Object.values(snapshot.val())[0].ownerInfo.phone;
                     let nombremascota = Object.values(snapshot.val())[0].petInfo.petName;
+                    let foto = Object.values(snapshot.val())[0].petInfo.petPhoto;
                     if (snapshot.exists()){
                         snapshot.forEach((childSnapshot) => {
                             key = childSnapshot.key;
-                            this.getUserId(key, correo, telefono, nombremascota);
+                            this.getUserId(key, correo, telefono, nombremascota, foto);
                         });
                         }
                     })
@@ -109,11 +111,12 @@ class FilterForm extends React.Component {
         });
     }
 
-    getUserId(key, mail, phone, pet){
+    getUserId(key, mail, phone, pet, img){
         this.setState({userId: key,
             userMail: mail,
             userPhone: phone,
-            userPet: pet});
+            userPet: pet,
+            userPetImg: img});
         console.log("User logged: " + key);
     }
 
@@ -208,7 +211,7 @@ class FilterForm extends React.Component {
     render() {
         let petCard = this.state.pet.map(pet=>{
             return(
-                <PetCard user={this.state.userId} userMail={this.state.userMail} userPhone={this.state.userPhone} userPet={this.state.userPet} pet={pet}/>
+                <PetCard user={this.state.userId} userMail={this.state.userMail} userPhone={this.state.userPhone} userPet={this.state.userPet} userPetImg={this.state.userPetImg} pet={pet}/>
             )
         })
 

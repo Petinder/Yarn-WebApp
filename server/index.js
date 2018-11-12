@@ -2,13 +2,12 @@ const express = require('express');
 const cors = require('cors');
 const sgMail = require('@sendgrid/mail');
 var config = require('./config');
+var http = require('https');
 
 const app = express();
+var apiKey = config.mailKey;
 
-//sendgrid api key
-sgMail.setApiKey(config.mailKey);
-
-app.use(cors()); //utilize Cors so the browser doesn't restrict data, without it Sendgrid will not send!
+app.use(cors());
 
 // Welcome page of the express server: 
 app.get('/', (req, res) => {
@@ -16,22 +15,48 @@ app.get('/', (req, res) => {
 });
 
 app.get('/send-email', (req,res) => {
-    
     //Get Variables from query string in the search bar
-    const { recipient, sender, topic, text } = req.query; 
+    const { recipient, topic, text, img, token } = req.query; 
+    var url1 = img.substr(0,78).concat("%2F");
+    var url2 = img.substr(79);
+    var imgUrl = url1.concat(url2, "&token=", token);
+    console.log(imgUrl);
+    console.log("to: " + recipient);
+    
+    var options = {
+        "method": "POST",
+        "hostname": "api.sendgrid.com",
+        "port": null,
+        "path": "/v3/mail/send",
+        "headers": {
+          "authorization": "Bearer " + apiKey,
+          "content-type": "application/json"
+        }
+      };
+      
+      var req = http.request(options, function (res) {
+        var chunks = [];
+      
+        res.on("data", function (chunk) {
+          chunks.push(chunk);
+        });
+      
+        res.on("end", function () {
+          var body = Buffer.concat(chunks);
+          console.log(body.toString());
+        });
+      });
+      
+      req.write(JSON.stringify({ personalizations: 
+         [ { to: [ { email: recipient } ],
+            subject: topic } ],
+            from: { email: 'marinesm96@gmail.com', name: 'Petinder' },
+        content: 
+         [ { type: 'text/html',
+             value: "<header>"+ text +"</header><img src=\'" + imgUrl + "\'/>" } ] }));
+        
+      req.end();
 
-    //Sendgrid Data Requirements
-    const msg = {
-        to: recipient, 
-        from: sender,
-        subject: topic,
-        text: text,
-    }
-
-    //Send Email
-    sgMail.send(msg)
-    .then((msg) => console.log(text)).catch(err => console.error(err));
-    console.log('email: ' + text);
 });
 
 // to access server run 'nodemon index.js' then click here: http://localhost:4000/

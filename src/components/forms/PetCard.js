@@ -10,13 +10,13 @@ class PetCard extends Component {
         this.state={active: false};
     }
 
-    sendEmail(toMail, name, phone) {
-        console.log('Send email');
+    sendEmail(toMail, name, phone, img) {
+        console.log("mail");
         var to = toMail
         var from = "marinesm96@gmail.com"
         var subject = "¡Quiero conocerte!"
-        var eText = "¡Hola! Mi nombre es " + name + " y me gustaría conocerte. Me puedes contactar al teléfono: " + phone + ". Petinder"
-        fetch(`http://localhost:4000/send-email?recipient=${to}&sender=${from}&topic=${subject}&text=${eText}`) //query string url
+        var eText = "¡Hola! Mi nombre es " + name + " y me gustaría conocerte. Me puedes contactar al teléfono: " + phone + "."
+        fetch(`http://localhost:4000/send-email?recipient=${to}&sender=${from}&topic=${subject}&text=${eText}&img=${img}`) //query string url
           .catch(err => console.error(err))
     }
 
@@ -34,8 +34,7 @@ class PetCard extends Component {
     }
 
     handlec = () =>{
-        console.log("email " + this.props.userMail);
-        this.sendEmail(this.props.pet.mail, this.props.userPet, this.props.userPhone)
+        this.sendEmail(this.props.pet.mail, this.props.userPet, this.props.userPhone, this.props.userPetImg)
     }
 
     render(){
