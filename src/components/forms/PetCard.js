@@ -54,7 +54,7 @@ class PetCard extends Component {
                 )
             })
         }else{
-            petCardHist = "No tiene actualizado el historial de vacunas";
+            petCardHist = <Table.Row><Table.HeaderCell colSpan='4' textAlign='center'>No tiene actualizado el historial de vacunas</Table.HeaderCell></Table.Row>;
         }
 
         let buttonLike = "";
@@ -62,6 +62,13 @@ class PetCard extends Component {
             buttonLike = "Guau"
         }else{
             buttonLike = "Miau"
+        }
+
+        let pedi="";
+        if(this.props.pet.pedigree === 1){
+            pedi = "Tiene pedigree"
+        }else{
+            pedi = "No tiene pedigree"
         }
         
         return(
@@ -87,12 +94,7 @@ class PetCard extends Component {
                     <Modal.Header>
                         ¿Quieres contactar al dueño de la mascota?
                     </Modal.Header>
-                    <Modal.Content>
-                    <Button floated='right' color='orange' inverted  onClick={this.handlec}>
-                        <Icon name='home' /> ¡Enviar correo!
-                    </Button>
-                    <br/>
-                    <br/>
+                    <Modal.Content>     
                     <Table celled striped color="yellow" key="yellow" >
                         <Table.Header>
                             <Table.Row>
@@ -108,7 +110,17 @@ class PetCard extends Component {
                         <Table.Body>
                             {petCardHist}
                         </Table.Body>
+                        <Table.Footer>
+                                <Table.Row>
+                                    <Table.HeaderCell colSpan='4' textAlign='center'>{pedi}</Table.HeaderCell>
+                                </Table.Row>
+                            </Table.Footer>
                     </Table>
+                    <Button floated='right' color='orange' inverted  onClick={this.handlec}>
+                        <Icon name='home' /> ¡Enviar correo!
+                    </Button>
+                    <br/>
+                    <br/>
                     </Modal.Content>
                 </Modal>
                 </div>

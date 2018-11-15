@@ -78,7 +78,8 @@ class FilterForm extends React.Component {
                                 mail: snapshot.child('ownerInfo/mail').val(),
                                 like: likes,
                                 encanta: encanta,
-                                vaccinations: snapshot.child('petInfo/petVaccinations').val()}, )
+                                vaccinations: snapshot.child('petInfo/petVaccinations').val(),
+                                pedigree: snapshot.child('petInfo/petPedigree').val()}, )
     }
 
     handleLogout () {
