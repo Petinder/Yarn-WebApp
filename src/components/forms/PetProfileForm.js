@@ -282,6 +282,10 @@ class PetProfileForm extends React.Component {
                                     </Label>
                                     <input id="file" hidden type="file" onChange={this.handleUpload} />
                                     </p>
+                                    <br/>
+                                    <Label color="green"  width="4" as="label" htmlFor="file" size="large">
+                                        Recomendamos que la imágen sea de 180 X 180 px como mínimo
+                                    </Label>
                                 </div>
                             </Grid.Column>
                             <Grid.Column width={6}>
